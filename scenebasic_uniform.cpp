@@ -60,6 +60,10 @@ void SceneBasic_Uniform::initScene()
 	prog.setUniform("Lights[2].La", vec3(0.2f, 0.0f, 0.0f));
 	prog.setUniform("Lights[2].Ls", vec3(0.8f, 0.0f, 0.0f));
 
+	prog.setUniform("Fog.MaxDist", 5.0f);
+	prog.setUniform("Fog.MinDist", 1.0f);
+	prog.setUniform("Fog.Colour", vec3(0.2f, 0.2f, 0.2f));
+
 	tPrev = 0;
 	angle = 0;
 }

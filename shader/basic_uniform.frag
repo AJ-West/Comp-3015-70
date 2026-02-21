@@ -5,6 +5,12 @@ in vec3 crntPosFrag;
 //current normal from last stage
 in vec3 crntNormFrag;
 
+uniform struct FogInfo{
+    float MaxDist;
+    float MinDist;
+    vec3 Colour;
+}Fog;
+
 uniform struct LightInfo{
     vec4 Position;
     vec3 Ld;
@@ -63,10 +69,18 @@ void main() {
     vec4 position;
     getCamSpaceValues(norm, position);
 
-    vec3 Colour = vec3(0.0);
+    float dist = abs(position.z);
+
+    float fogFactor = (Fog.MaxDist - dist)/(Fog.MaxDist - Fog.MinDist);
+
+    fogFactor = clamp(fogFactor,0.0,1.0); 
+
+    vec3 phongColour = vec3(0.0);
     for (int i=0; i<3; i++){
-        Colour += blingPhongModel(i, position.xyz, norm);
+        phongColour += blingPhongModel(i, position.xyz, norm);
     }
+
+    vec3 Colour = mix(Fog.Colour, phongColour, fogFactor);
 
     FragColor = vec4(Colour, 1.0);
 }
