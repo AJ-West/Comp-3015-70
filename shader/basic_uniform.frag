@@ -23,6 +23,10 @@ uniform mat4 ModelViewMatrix;
 uniform mat3 NormalMatrix;
 uniform vec3 camPos;
 
+// for toon shading
+const int levels = 4;
+const float scaleFactor = 1.0/levels;
+
 //get position and normal to camera space
 void getCamSpaceValues(out vec3 normal, out vec4 position){
     normal = normalize(NormalMatrix * crntNormFrag);
@@ -40,16 +44,16 @@ vec3 blingPhongModel(int light, vec3 position, vec3 normal){
     vec3 viewDir = normalize(camPos - position);
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float sDotn = max(dot(halfwayDir, normal), 0.0);
-    vec3 diffuse = Lights[light].Ld*Material.Kd*sDotn;
+    vec3 diffuse = Lights[light].Ld*Material.Kd*floor(sDotn*levels)*scaleFactor;
 
-    vec3 specular = vec3(0.0);
+    /*vec3 specular = vec3(0.0);
     if (sDotn>0.0){
         vec3 reflectDir = reflect(-lightDir,normal);
         float specAmount = pow(max(dot(reflectDir, normal), 0.0), Material.Shininess);
         specular = specAmount * Material.Ks * Lights[light].Ls;
-    }
+    }*/
 
-    return ambient + diffuse + specular;
+    return ambient + diffuse;// + specular;
 }
 
 void main() {
