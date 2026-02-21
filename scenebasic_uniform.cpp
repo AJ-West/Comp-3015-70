@@ -6,6 +6,7 @@
 #include <string>
 using std::string;
 
+#include <sstream>
 #include <iostream>
 using std::cerr;
 using std::endl;
@@ -37,21 +38,27 @@ void SceneBasic_Uniform::initScene()
 	projection = mat4(1.0f);
 
 	prog.setUniform("Model", model);
-	prog.setUniform("LightPosition", view * glm::vec4(5.0f, 5.0f, 2.0f, 1.0f));
-	prog.setUniform("Ld", vec3(1.0f, 1.0f, 1.0f));
-	prog.setUniform("Kd", vec3(0.2f, 0.55f, 0.9f));
 
-	prog.setUniform("Model", model);
+	float x, z;
+	for (int i = 0; i < 3; i++) {
+		std::stringstream name;
+		name << "Lights[" << i << "].Position";
+		x = 2.0f * cosf((glm::two_pi<float>() / 3) * i);
+		z = 2.0f * sinf((glm::two_pi<float>() / 3) * i);
+		prog.setUniform(name.str().c_str(), view * glm::vec4(x, 1.2f, z + 1.0f, 1.0f));
+	}
 
-	/*prog.setUniform("Light.Position", view * glm::vec4(5.0f, 5.0f, 2.0f, 0.0f));
-	prog.setUniform("Light.Ld", vec3(1.0f, 1.0f, 1.0f));
-	prog.setUniform("Light.La", vec3(0.4f, 0.4f, 0.4f));
-	prog.setUniform("Light.Ls", vec3(1.0f, 1.0f, 1.0f));
+	prog.setUniform("Lights[0].Ld", vec3(0.0f, 0.0f, 0.8f));
+	prog.setUniform("Lights[0].La", vec3(0.0f, 0.0f, 0.2f));
+	prog.setUniform("Lights[0].Ls", vec3(0.0f, 0.0f, 0.8f));
 
-	prog.setUniform("Material.Kd", vec3(0.2f, 0.55f, 0.9f));
-	prog.setUniform("Material.Ka", vec3(0.2f, 0.55f, 0.9f));
-	prog.setUniform("Material.Ks", vec3(0.8f, 0.8f, 0.8f));
-	prog.setUniform("Material.Shininess", 100.0f);*/
+	prog.setUniform("Lights[1].Ld", vec3(0.0f, 0.8f, 0.0f));
+	prog.setUniform("Lights[1].La", vec3(0.0f, 0.2f, 0.0f));
+	prog.setUniform("Lights[1].Ls", vec3(0.0f, 0.8f, 0.0f));
+
+	prog.setUniform("Lights[2].Ld", vec3(0.8f, 0.0f, 0.0f));
+	prog.setUniform("Lights[2].La", vec3(0.2f, 0.0f, 0.0f));
+	prog.setUniform("Lights[2].Ls", vec3(0.8f, 0.0f, 0.0f));
 }
 
 void SceneBasic_Uniform::compile()
@@ -80,6 +87,11 @@ void SceneBasic_Uniform::updateCamera(int direction) {
 void SceneBasic_Uniform::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	prog.setUniform("Material.Kd", vec3(0.2f, 0.55f, 0.9f));
+	prog.setUniform("Material.Ka", vec3(0.2f, 0.55f, 0.9f));
+	prog.setUniform("Material.Ks", vec3(0.8f, 0.8f, 0.8f));
+	prog.setUniform("Material.Shininess", 100.0f);
 
 	setMatrices();
 	torus.render();

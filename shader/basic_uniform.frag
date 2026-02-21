@@ -1,33 +1,24 @@
 #version 460
 
-// for show faces
-//flat in vec3 LightIntensity;
-
-//for smooth shading
-vec3 LightIntensity;
-
 //current position from last stage
 in vec3 crntPosFrag;
 //current normal from last stage
 in vec3 crntNormFrag;
 
-/*uniform struct LightInfo{
+uniform struct LightInfo{
     vec4 Position;
     vec3 Ld;
     vec3 La;
     vec3 Ls;
-}Light;
+} Lights[3];
 
 uniform struct MaterialInfo{
     vec3 Kd;
     vec3 Ka;
     vec3 Ks;
-    vec3 Shininess;
-}Material;*/
+    float Shininess;
+} Material;
 
-uniform vec4 LightPosition;
-uniform vec3 Kd;
-uniform vec3 Ld;
 uniform mat4 ModelViewMatrix;
 uniform mat3 NormalMatrix;
 uniform vec3 camPos;
@@ -41,29 +32,37 @@ void getCamSpaceValues(out vec3 normal, out vec4 position){
 
 layout (location = 0) out vec4 FragColor;
 
-void main() {    
-    //PHONG
+vec3 blingPhongModel(int light, vec3 position, vec3 normal){
     //Ambient
-    float ambient = 1.0f;
+    vec3 ambient = Lights[light].La*Material.Ka;
+
+    vec3 lightDir = normalize(vec3(Lights[light].Position.xyz - position));
+    vec3 viewDir = normalize(camPos - position);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float sDotn = max(dot(halfwayDir, normal), 0.0);
+    vec3 diffuse = Lights[light].Ld*Material.Kd*sDotn;
+
+    vec3 specular = vec3(0.0);
+    if (sDotn>0.0){
+        vec3 reflectDir = reflect(-lightDir,normal);
+        float specAmount = pow(max(dot(reflectDir, normal), 0.0), Material.Shininess);
+        specular = specAmount * Material.Ks * Lights[light].Ls;
+    }
+
+    return ambient + diffuse + specular;
+}
+
+void main() {
 
     //Diffuse
     vec3 norm;
     vec4 position;
     getCamSpaceValues(norm, position);
 
-    vec3 lightDir = normalize(vec3(LightPosition - position));
-    vec3 viewDir = normalize(camPos - crntPosFrag);
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    vec3 diffuse = Ld*Kd* max(dot(halfwayDir, norm), 0.0);
-    
+    vec3 Colour = vec3(0.0);
+    for (int i=0; i<3; i++){
+        Colour += blingPhongModel(i, position.xyz, norm);
+    }
 
-    //Specular
-    float specularLight = 1.5f;
-    vec3 reflectDir = reflect(-lightDir,norm);
-    float specAmount = pow(max(dot(reflectDir, norm), 0.0f), 2);
-    float specular = specAmount * specularLight;
-
-    LightIntensity = ambient * diffuse * specular;
-
-    FragColor = vec4(LightIntensity, 1.0);
+    FragColor = vec4(Colour, 1.0);
 }
