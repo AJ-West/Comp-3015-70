@@ -18,6 +18,9 @@ private:
 
     Torus torus;
 
+    float tPrev;
+    float angle;
+
     //Camera camera;
 
     void compile();

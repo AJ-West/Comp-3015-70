@@ -59,6 +59,9 @@ void SceneBasic_Uniform::initScene()
 	prog.setUniform("Lights[2].Ld", vec3(0.8f, 0.0f, 0.0f));
 	prog.setUniform("Lights[2].La", vec3(0.2f, 0.0f, 0.0f));
 	prog.setUniform("Lights[2].Ls", vec3(0.8f, 0.0f, 0.0f));
+
+	tPrev = 0;
+	angle = 0;
 }
 
 void SceneBasic_Uniform::compile()
@@ -77,6 +80,16 @@ void SceneBasic_Uniform::compile()
 void SceneBasic_Uniform::update( float t )
 {
 	view = lookAt(camera->getPosition(), camera->getPosition() + camera->getFront(), camera->getCameraUp());
+
+	//updating light position	
+
+	angle += 0.5f * (t - tPrev);
+
+	tPrev = t;
+
+	if (angle > glm::two_pi<float>()) {
+		angle -= glm::two_pi<float>();
+	}
 }
 
 void SceneBasic_Uniform::updateCamera(int direction) {
@@ -87,6 +100,15 @@ void SceneBasic_Uniform::updateCamera(int direction) {
 void SceneBasic_Uniform::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	float x, z;
+	for (int i = 0; i < 3; i++) {
+		std::stringstream name;
+		name << "Lights[" << i << "].Position";
+		x = 2.0f * cosf((glm::two_pi<float>() / 3) * i);
+		z = 2.0f * sinf((glm::two_pi<float>() / 3) * i);
+		prog.setUniform(name.str().c_str(), view * glm::vec4(x *cos(angle), 1.2f, (z + 1.0f)*sin(angle), 1.0f));
+	}
 
 	prog.setUniform("Material.Kd", vec3(0.2f, 0.55f, 0.9f));
 	prog.setUniform("Material.Ka", vec3(0.2f, 0.55f, 0.9f));
