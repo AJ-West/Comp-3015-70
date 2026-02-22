@@ -149,14 +149,20 @@
     <ClCompile Include="global.cpp" />
     <ClCompile Include="helper\glslprogram.cpp" />
     <ClCompile Include="helper\glutils.cpp" />
+    <ClCompile Include="helper\skybox.cpp" />
+    <ClCompile Include="helper\stb\stb_image.cpp" />
     <ClCompile Include="helper\torus.cpp" />
     <ClCompile Include="helper\trianglemesh.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="media\texture\cube.cpp" />
+    <ClCompile Include="media\texture\texture.cpp" />
     <ClCompile Include="scenebasic_uniform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\basic_uniform.frag" />
     <None Include="shader\basic_uniform.vert" />
+    <None Include="shader\skybox.frag" />
+    <None Include="shader\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
@@ -166,10 +172,13 @@
     <ClInclude Include="helper\glutils.h" />
     <ClInclude Include="helper\scene.h" />
     <ClInclude Include="helper\scenerunner.h" />
+    <ClInclude Include="helper\skybox.h" />
     <ClInclude Include="helper\stb\stb_image.h" />
     <ClInclude Include="helper\stb\stb_image_write.h" />
     <ClInclude Include="helper\torus.h" />
     <ClInclude Include="helper\trianglemesh.h" />
+    <ClInclude Include="media\texture\cube.h" />
+    <ClInclude Include="media\texture\texture.h" />
     <ClInclude Include="scenebasic_uniform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -25,6 +25,9 @@
     <Filter Include="helper\stb">
       <UniqueIdentifier>{2eeab77b-5d84-4893-b9df-1b2ed789b189}</UniqueIdentifier>
     </Filter>
+    <Filter Include="media\texture">
+      <UniqueIdentifier>{c4506d21-363f-482c-8036-674c5435bcea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -51,12 +54,30 @@
     <ClCompile Include="global.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="helper\stb\stb_image.cpp">
+      <Filter>helper\stb</Filter>
+    </ClCompile>
+    <ClCompile Include="media\texture\texture.cpp">
+      <Filter>media\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="media\texture\cube.cpp">
+      <Filter>media\texture</Filter>
+    </ClCompile>
+    <ClCompile Include="helper\skybox.cpp">
+      <Filter>helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\basic_uniform.frag">
       <Filter>shaders</Filter>
     </None>
     <None Include="shader\basic_uniform.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shader\skybox.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shader\skybox.vert">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>
@@ -96,6 +117,15 @@
     </ClInclude>
     <ClInclude Include="global.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="media\texture\texture.h">
+      <Filter>media\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="media\texture\cube.h">
+      <Filter>media\texture</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\skybox.h">
+      <Filter>helper</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

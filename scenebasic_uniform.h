@@ -10,13 +10,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "helper/torus.h"
+#include "media/texture/cube.h"
+#include "helper/skybox.h"
 
 class SceneBasic_Uniform : public Scene
 {
 private:
     GLSLProgram prog;
+    GLSLProgram skyProg;
 
     Torus torus;
+
+    Cube cube;
+
+    SkyBox sky;
 
     float tPrev;
     float angle;
@@ -25,7 +32,7 @@ private:
 
     void compile();
 
-    void setMatrices();
+    void setMatrices(glm::mat4 model);
 
 public:
     SceneBasic_Uniform();

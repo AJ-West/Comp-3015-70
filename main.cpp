@@ -5,6 +5,7 @@
 
 int main(int argc, char* argv[])
 {
+	system("pause");
 	SceneRunner runner("Shader_Basics");
 
 	std::unique_ptr<Scene> scene;

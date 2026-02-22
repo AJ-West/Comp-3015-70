@@ -4,6 +4,13 @@
 in vec3 crntPosFrag;
 //current normal from last stage
 in vec3 crntNormFrag;
+// tex coord from last stage
+in vec2 TexCoord;
+
+layout(binding=0) uniform sampler2D brickTex;
+layout(binding=1) uniform sampler2D mossTex;
+
+layout (location = 0) out vec4 FragColor;
 
 uniform struct FogInfo{
     float MaxDist;
@@ -40,17 +47,17 @@ void getCamSpaceValues(out vec3 normal, out vec4 position){
     position = ModelViewMatrix * vec4(crntPosFrag, 1.0);
 }
 
-layout (location = 0) out vec4 FragColor;
-
 vec3 blingPhongModel(int light, vec3 position, vec3 normal){
     //Ambient
-    vec3 ambient = Lights[light].La*Material.Ka;
-
+    //vec3 ambient = Lights[light].La*Material.Ka;
+    vec3 ambient = Lights[light].La;//*Material.Ka;
+    
     vec3 lightDir = normalize(vec3(Lights[light].Position.xyz - position));
     vec3 viewDir = normalize(camPos - position);
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float sDotn = max(dot(halfwayDir, normal), 0.0);
-    vec3 diffuse = Lights[light].Ld*Material.Kd*floor(sDotn*levels)*scaleFactor;
+    //vec3 diffuse = Lights[light].Ld*Material.Kd*floor(sDotn*levels)*scaleFactor;
+    vec3 diffuse = Lights[light].Ld*floor(sDotn*levels)*scaleFactor;
 
     /*vec3 specular = vec3(0.0);
     if (sDotn>0.0){
@@ -81,6 +88,13 @@ void main() {
     }
 
     vec3 Colour = mix(Fog.Colour, phongColour, fogFactor);
+
+    vec4 brickTextColour = texture(brickTex, TexCoord);
+    vec4 mossTextColour = texture(mossTex, TexCoord);
+
+    vec3 textColour = mix(brickTextColour.rgb, mossTextColour.rgb, mossTextColour.a);
+        
+    Colour *= textColour;
 
     FragColor = vec4(Colour, 1.0);
 }
