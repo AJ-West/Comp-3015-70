@@ -45,41 +45,37 @@ void SceneBasic_Uniform::initScene()
 
 	projection = mat4(1.0f);
 
+	prog.use();
+
 	prog.setUniform("Model", model1);
 
-	float x, z;
-	for (int i = 0; i < 1; i++) {
-		std::stringstream name;
-		name << "Lights[" << i << "].Position";
-		x = 2.0f * cosf((glm::two_pi<float>() / 3) * i);
-		z = 2.0f * sinf((glm::two_pi<float>() / 3) * i);
-		prog.setUniform(name.str().c_str(), view * glm::vec4(x, 1.2f, z + 1.0f, 1.0f));
-	}
-
-	prog.setUniform("Lights[0].Ld", vec3(0.0f, 0.0f, 0.8f));
-	prog.setUniform("Lights[0].La", vec3(0.0f, 0.0f, 0.2f));
-	prog.setUniform("Lights[0].Ls", vec3(0.0f, 0.0f, 0.8f));
-
-	prog.setUniform("Lights[1].Ld", vec3(0.0f, 0.8f, 0.0f));
-	prog.setUniform("Lights[1].La", vec3(0.0f, 0.2f, 0.0f));
-	prog.setUniform("Lights[1].Ls", vec3(0.0f, 0.8f, 0.0f));
-
-	prog.setUniform("Lights[2].Ld", vec3(0.8f, 0.0f, 0.0f));
-	prog.setUniform("Lights[2].La", vec3(0.2f, 0.0f, 0.0f));
-	prog.setUniform("Lights[2].Ls", vec3(0.8f, 0.0f, 0.0f));
-
-	prog.setUniform("Fog.MaxDist", 5.0f);
-	prog.setUniform("Fog.MinDist", 1.0f);
-	prog.setUniform("Fog.Colour", vec3(0.2f, 0.2f, 0.2f));
+	setProgDefaults(&prog);
 
 	GLuint brickID = Texture::loadTexture("media/texture/brick1.jpg");
 	GLuint mossID = Texture::loadTexture("media/texture/moss.png");
+	GLuint texture = Texture::loadTexture("media/texture/ogre_diffuse.png");
+	GLuint normalMap = Texture::loadTexture("media/texture/ogre_normalmap.png");
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, brickID);
 
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, mossID);
+
+	normalProg.use();
+
+	ogre = ObjMesh::load("media/texture/bs_ears.obj", false, true);
+
+	setProgDefaults(&normalProg);
+	
+	//GLuint textureNormal = Texture::loadTexture("media/texture/ogre_diffuse.png");
+	//GLuint normalMap = Texture::loadTexture("media/texture/ogre_normalmap.png");
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, normalMap);
 
 	skyProg.use();
 
@@ -91,14 +87,47 @@ void SceneBasic_Uniform::initScene()
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
 }
 
+void SceneBasic_Uniform::setProgDefaults(GLSLProgram* cProg) {
+	float x, z;
+	for (int i = 0; i < 1; i++) {
+		std::stringstream name;
+		name << "Lights[" << i << "].Position";
+		x = 2.0f * cosf((glm::two_pi<float>() / 3) * i);
+		z = 2.0f * sinf((glm::two_pi<float>() / 3) * i);
+		cProg->setUniform(name.str().c_str(), view * glm::vec4(x, 1.2f, z + 1.0f, 1.0f));
+	}
+	cProg->setUniform("Lights[0].Ld", vec3(0.8f, 0.8f, 0.8f));
+	cProg->setUniform("Lights[0].La", vec3(0.2f, 0.2f, 0.2f));
+	cProg->setUniform("Lights[0].Ls", vec3(0.8f, 0.8f, 0.8f));
+
+	/*cProg->setUniform("Lights[0].Ld", vec3(0.0f, 0.0f, 0.8f));
+	cProg->setUniform("Lights[0].La", vec3(0.0f, 0.0f, 0.2f));
+	cProg->setUniform("Lights[0].Ls", vec3(0.0f, 0.0f, 0.8f));
+
+	cProg->setUniform("Lights[1].Ld", vec3(0.0f, 0.8f, 0.0f));
+	cProg->setUniform("Lights[1].La", vec3(0.0f, 0.2f, 0.0f));
+	cProg->setUniform("Lights[1].Ls", vec3(0.0f, 0.8f, 0.0f));
+
+	cProg->setUniform("Lights[2].Ld", vec3(0.8f, 0.0f, 0.0f));
+	cProg->setUniform("Lights[2].La", vec3(0.2f, 0.0f, 0.0f));
+	cProg->.setUniform("Lights[2].Ls", vec3(0.8f, 0.0f, 0.0f));*/
+
+	cProg->setUniform("Fog.MaxDist", 5.0f);
+	cProg->setUniform("Fog.MinDist", 1.0f);
+	cProg->setUniform("Fog.Colour", vec3(0.2f, 0.2f, 0.2f));
+}
+
 void SceneBasic_Uniform::compile()
 {
 	try {
 		prog.compileShader("shader/basic_uniform.vert");
 		prog.compileShader("shader/basic_uniform.frag");
+		normalProg.compileShader("shader/normal.vert");
+		normalProg.compileShader("shader/normal.frag");
 		skyProg.compileShader("shader/skybox.vert");
 		skyProg.compileShader("shader/skybox.frag");
 		prog.link();
+		normalProg.link();
 		skyProg.link();
 		prog.use();
 	} catch (GLSLProgramException &e) {
@@ -150,17 +179,15 @@ void SceneBasic_Uniform::render()
 		prog.setUniform(name.str().c_str(), view * glm::vec4(x *cos(angle), 1.2f, (z + 1.0f)*sin(angle), 1.0f));
 	}
 
-	prog.setUniform("Material.Kd", vec3(0.2f, 0.55f, 0.9f));
-	prog.setUniform("Material.Ka", vec3(0.2f, 0.55f, 0.9f));
-	prog.setUniform("Material.Ks", vec3(0.8f, 0.8f, 0.8f));
-	prog.setUniform("Material.Shininess", 100.0f);
-
-	setMatrices(model1);
+	setMatrices(model1, &prog);
 	prog.setUniform("Model", model1);
 	torus.render();
-	setMatrices(model2);
+
+	normalProg.use();
+	setMatrices(model2, &normalProg);
 	prog.setUniform("Model", model2);
-	cube.render();
+	ogre->render();
+	//cube.render();
 }
 
 void SceneBasic_Uniform::resize(int w, int h)
@@ -171,14 +198,14 @@ void SceneBasic_Uniform::resize(int w, int h)
 	projection = glm::perspective(glm::radians(70.0f), (float)w / h, 0.3f, 100.0f);
 }
 
-void SceneBasic_Uniform::setMatrices(mat4 model) {
+void SceneBasic_Uniform::setMatrices(mat4 model, GLSLProgram* cProg) {
 	mat4 mv = view * model;
 
-	prog.setUniform("camPos", camera->getPosition());
+	cProg->setUniform("camPos", camera->getPosition());
 	
-	prog.setUniform("ModelViewMatrix", mv);
+	cProg->setUniform("ModelViewMatrix", mv);
 
-	prog.setUniform("NormalMatrix", glm::mat3(vec3(mv[0]), vec3(mv[1]), vec3(mv[2])));
+	cProg->setUniform("NormalMatrix", glm::mat3(vec3(mv[0]), vec3(mv[1]), vec3(mv[2])));
 
-	prog.setUniform("MVP", projection * mv);
+	cProg->setUniform("MVP", projection * mv);
 }

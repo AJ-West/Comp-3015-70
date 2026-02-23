@@ -66,6 +66,9 @@
     <ClCompile Include="helper\skybox.cpp">
       <Filter>helper</Filter>
     </ClCompile>
+    <ClCompile Include="helper\objmesh.cpp">
+      <Filter>helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\basic_uniform.frag">
@@ -78,6 +81,12 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shader\skybox.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shader\normal.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shader\normal.vert">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>
@@ -125,6 +134,15 @@
       <Filter>media\texture</Filter>
     </ClInclude>
     <ClInclude Include="helper\skybox.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\aabb.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\objmesh.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\utils.h">
       <Filter>helper</Filter>
     </ClInclude>
   </ItemGroup>

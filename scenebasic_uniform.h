@@ -13,26 +13,31 @@
 #include "media/texture/cube.h"
 #include "helper/skybox.h"
 
+#include "helper/objmesh.h"
+
 class SceneBasic_Uniform : public Scene
 {
 private:
     GLSLProgram prog;
     GLSLProgram skyProg;
+    GLSLProgram normalProg;
 
     Torus torus;
 
     Cube cube;
+
+    std::unique_ptr<ObjMesh> ogre;
 
     SkyBox sky;
 
     float tPrev;
     float angle;
 
-    //Camera camera;
+    void setProgDefaults(GLSLProgram* cProg);
 
     void compile();
 
-    void setMatrices(glm::mat4 model);
+    void setMatrices(glm::mat4 model, GLSLProgram* cProg);
 
 public:
     SceneBasic_Uniform();
