@@ -117,18 +117,18 @@ void SceneBasic_Uniform::setUpFullScreenQuad() {
 
 void SceneBasic_Uniform::setProgDefaults(GLSLProgram* cProg) {
 	float x, z;
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 3; i++) {
 		std::stringstream name;
 		name << "Lights[" << i << "].Position";
 		x = 2.0f * cosf((glm::two_pi<float>() / 3) * i);
 		z = 2.0f * sinf((glm::two_pi<float>() / 3) * i);
 		cProg->setUniform(name.str().c_str(), view * glm::vec4(x, 1.2f, z + 1.0f, 1.0f));
 	}
-	cProg->setUniform("Lights[0].Ld", vec3(5.0f, 5.0f, 5.0f));
-	cProg->setUniform("Lights[0].La", vec3(0.2f, 0.2f, 0.2f));
-	cProg->setUniform("Lights[0].Ls", vec3(5.0f, 5.0f, 5.0f));
+	//cProg->setUniform("Lights[0].Ld", vec3(5.0f, 5.0f, 5.0f));
+	//cProg->setUniform("Lights[0].La", vec3(0.2f, 0.2f, 0.2f));
+	//cProg->setUniform("Lights[0].Ls", vec3(5.0f, 5.0f, 5.0f));
 
-	/*cProg->setUniform("Lights[0].Ld", vec3(0.0f, 0.0f, 0.8f));
+	cProg->setUniform("Lights[0].Ld", vec3(0.0f, 0.0f, 0.8f));
 	cProg->setUniform("Lights[0].La", vec3(0.0f, 0.0f, 0.2f));
 	cProg->setUniform("Lights[0].Ls", vec3(0.0f, 0.0f, 0.8f));
 
@@ -138,10 +138,10 @@ void SceneBasic_Uniform::setProgDefaults(GLSLProgram* cProg) {
 
 	cProg->setUniform("Lights[2].Ld", vec3(0.8f, 0.0f, 0.0f));
 	cProg->setUniform("Lights[2].La", vec3(0.2f, 0.0f, 0.0f));
-	cProg->.setUniform("Lights[2].Ls", vec3(0.8f, 0.0f, 0.0f));*/
+	cProg->setUniform("Lights[2].Ls", vec3(0.8f, 0.0f, 0.0f));
 
-	cProg->setUniform("Fog.MaxDist", 5.0f);
-	cProg->setUniform("Fog.MinDist", 1.0f);
+	cProg->setUniform("Fog.MaxDist", 10.0f);
+	cProg->setUniform("Fog.MinDist", 0.0f);
 	cProg->setUniform("Fog.Colour", vec3(0.0f, 0.0f, 0.0f));
 }
 
@@ -237,7 +237,7 @@ void SceneBasic_Uniform::setupFBO() {
 
 void SceneBasic_Uniform::pass1() {
 	prog.setUniform("Pass", 1);
-	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	glViewport(0, 0, width, height);
 	glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

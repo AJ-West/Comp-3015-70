@@ -4,10 +4,10 @@ in vec3 Vec;
 
 layout(binding=0) uniform samplerCube SkyBoxTex;
 
-layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec3 HDRColor; // need to set output to HDRColor else wont be displayed in the quad
 
 void main() {
     vec3 texColor = texture(SkyBoxTex, normalize(Vec)).rgb;
 
-    FragColor = vec4(texColor, 1.0);
+    HDRColor = texColor;
 }
