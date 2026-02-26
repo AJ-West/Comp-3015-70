@@ -20,15 +20,12 @@ class SceneBasic_Uniform : public Scene
 private:
     GLSLProgram prog;
     GLSLProgram skyProg;
-    GLSLProgram normalProg;
 
     GLuint hdrFBO;
     GLuint quad;
     GLuint hdrTex, avgTex;
 
     Torus torus;
-
-    Cube cube;
 
     std::unique_ptr<ObjMesh> ogre;
 

@@ -6,9 +6,14 @@ in vec3 crntPosFrag;
 in vec3 crntNormFrag;
 // tex coord from last stage
 in vec2 TexCoord;
+// tangents from last stage
+in vec4 vertTangent;
 
+layout(binding=0) uniform sampler2D HDRTex;
 layout(binding=1) uniform sampler2D brickTex;
 layout(binding=2) uniform sampler2D mossTex;
+layout(binding=3) uniform sampler2D textureTex;
+layout(binding=4) uniform sampler2D normalTex;
 
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec3 HDRColor;
@@ -16,7 +21,6 @@ layout (location = 1) out vec3 HDRColor;
 //for HDR
 uniform int Pass; // Pass number
 uniform float AveLum;
-layout(binding=0) uniform sampler2D HDRTex;
 
 //XYZ/RGB conversion matrices from http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
 uniform mat3 rgb2xyz = mat3(
@@ -95,17 +99,59 @@ vec3 blingPhongModel(int light, vec3 position, vec3 normal){
     return ambient + diffuse;// + specular;
 }
 
+vec3 blingPhongModelNormal(int light, vec3 position, vec3 normal, mat3 objectLocal){
+    //Ambient
+    vec3 ambient = Lights[light].La;
+    
+    vec3 lightDir = normalize(objectLocal* vec3(Lights[light].Position.xyz - position));
+    vec3 viewDir = normalize(camPos - position);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    float sDotn = max(dot(halfwayDir, normal), 0.0);
+    vec3 diffuse = Lights[light].Ld*floor(sDotn*levels)*scaleFactor;
+
+    /*vec3 specular = vec3(0.0);
+    if (sDotn>0.0){
+        vec3 reflectDir = reflect(-lightDir,normal);
+        float specAmount = pow(max(dot(reflectDir, normal), 0.0), Material.Shininess);
+        specular = specAmount * Lights[light].Ls;
+    }*/
+
+    return ambient + diffuse;// + specular;
+}
+
+void calcNormalMapValues(out vec4 position, out mat3 toObjectLocal){
+    //Transform normal and tangent to eye space
+    vec3 norm = normalize(NormalMatrix * crntNormFrag);
+    vec3 tang = normalize(NormalMatrix * vec3(vertTangent));
+
+    // Compute binormal
+    vec3 binormal = normalize(cross(norm,tang))*vertTangent.w;
+
+    //Transformation matrix
+    toObjectLocal = mat3(
+        tang.x, binormal.x, norm.x,
+        tang.y, binormal.y, norm.y,
+        tang.z, binormal.z, norm.z
+    );
+
+    position = ModelViewMatrix * vec4(crntPosFrag, 1.0);
+}
+
+void calcFog(in vec4 position){
+    float dist = abs(position.z);
+
+    fogFactor = (Fog.MaxDist - dist)/(Fog.MaxDist - Fog.MinDist);
+
+    fogFactor = clamp(fogFactor,0.0,1.0); 
+}
+
 void pass1(){
     //Diffuse
     vec3 norm;
     vec4 position;
     getCamSpaceValues(norm, position);
 
-    float dist = abs(position.z);
-
-    fogFactor = (Fog.MaxDist - dist)/(Fog.MaxDist - Fog.MinDist);
-
-    fogFactor = clamp(fogFactor,0.0,1.0); 
+    calcFog(position);
 
     for (int i=0; i<3; i++){
         HDRColor += blingPhongModel(i, position.xyz, norm);
@@ -117,6 +163,31 @@ void pass1(){
     vec3 textColour = mix(brickTextColour.rgb, mossTextColour.rgb, mossTextColour.a);
 
     HDRColor *= textColour;
+
+    HDRColor = mix(Fog.Colour, HDRColor, fogFactor);
+}
+
+void pass1Normal(){
+    //Diffuse
+    vec4 position;
+    mat3 objectLocal;
+    calcNormalMapValues(position, objectLocal);
+
+    vec3 norm = texture(normalTex, TexCoord).xyz;
+    norm.xy = 2.0*norm.xy - 1.0;
+
+    calcFog(position);
+
+    for (int i=0; i<3; i++){
+        HDRColor += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
+    }
+
+    vec4 brickTextColour = texture(brickTex, TexCoord);
+    vec4 mossTextColour = texture(mossTex, TexCoord);
+
+    vec3 textColour = mix(brickTextColour.rgb, mossTextColour.rgb, mossTextColour.a);
+
+    HDRColor *= texture(textureTex, TexCoord).xyz;
 
     HDRColor = mix(Fog.Colour, HDRColor, fogFactor);
 }
@@ -151,8 +222,10 @@ void pass2(){
 }
 
 void main() {
-    if(Pass == 1)
+    if(Pass == 1 && !normal)
     pass1();
+    if(Pass == 1 && normal)
+    pass1Normal();
     else if(Pass == 2)
     pass2();
 

@@ -83,12 +83,6 @@
     <None Include="shader\skybox.vert">
       <Filter>shaders</Filter>
     </None>
-    <None Include="shader\normal.frag">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shader\normal.vert">
-      <Filter>shaders</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper\scene.h">

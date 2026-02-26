@@ -23,7 +23,7 @@ using glm::vec3;
 
 using glm::mat4;
 
-SceneBasic_Uniform::SceneBasic_Uniform() : torus(0.7f, 0.3f, 30, 30), cube(1.0f), sky(100.0f) {
+SceneBasic_Uniform::SceneBasic_Uniform() : torus(0.7f, 0.3f, 30, 30), sky(100.0f) {
 	tPrev = 0;
 	angle = 0;
 }
@@ -65,11 +65,7 @@ void SceneBasic_Uniform::initScene()
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, mossID);
 
-	normalProg.use();
-
 	ogre = ObjMesh::load("media/texture/bs_ears.obj", false, true);
-
-	setProgDefaults(&normalProg);
 
 	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -154,12 +150,9 @@ void SceneBasic_Uniform::compile()
 	try {
 		prog.compileShader("shader/basic_uniform.vert");
 		prog.compileShader("shader/basic_uniform.frag");
-		normalProg.compileShader("shader/normal.vert");
-		normalProg.compileShader("shader/normal.frag");
 		skyProg.compileShader("shader/skybox.vert");
 		skyProg.compileShader("shader/skybox.frag");
 		prog.link();
-		normalProg.link();
 		skyProg.link();
 		prog.use();
 	} catch (GLSLProgramException &e) {
@@ -244,7 +237,7 @@ void SceneBasic_Uniform::setupFBO() {
 
 void SceneBasic_Uniform::pass1() {
 	prog.setUniform("Pass", 1);
-	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 	glViewport(0, 0, width, height);
 	glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -305,9 +298,8 @@ void SceneBasic_Uniform::drawScene() {
 	prog.setUniform("normal", false);
 	torus.render();
 
-	setMatrices(model2, &normalProg);
+	setMatrices(model2, &prog);
 	prog.setUniform("Model", model2);
 	prog.setUniform("normal", true);
 	ogre->render();
-	cube.render();
 }
