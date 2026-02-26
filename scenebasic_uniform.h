@@ -22,6 +22,10 @@ private:
     GLSLProgram skyProg;
     GLSLProgram normalProg;
 
+    GLuint hdrFBO;
+    GLuint quad;
+    GLuint hdrTex, avgTex;
+
     Torus torus;
 
     Cube cube;
@@ -38,6 +42,13 @@ private:
     void compile();
 
     void setMatrices(glm::mat4 model, GLSLProgram* cProg);
+
+    void setUpFullScreenQuad();
+    void setupFBO();
+    void pass1();
+    void pass2();
+    void computeLogAveLuminance();
+    void drawScene();
 
 public:
     SceneBasic_Uniform();

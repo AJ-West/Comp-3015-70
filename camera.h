@@ -37,7 +37,7 @@ public:
 	void setCameraFront(vec3 newFront) { front = newFront; }
 
 private:
-	float speed = 0.0001f;
+	float speed = 0.01f;
 
 	//Relative position within world space
 	vec3 position = vec3(0.0f, 0.0f, 0.5f);

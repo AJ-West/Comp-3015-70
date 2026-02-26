@@ -9,8 +9,8 @@ in vec2 TexCoord;
 // tangents from last stage
 in vec4 vertTangent;
 
-layout(binding=2) uniform sampler2D textureTex;
-layout(binding=3) uniform sampler2D normalTex;
+layout(binding=3) uniform sampler2D textureTex;
+layout(binding=4) uniform sampler2D normalTex;
 
 layout (location = 0) out vec4 FragColor;
 
@@ -94,9 +94,11 @@ void main() {
         phongColour += blingPhongModel(i, position.xyz, norm, objectLocal);
     }
 
-    vec3 Colour = mix(Fog.Colour, phongColour, fogFactor);
+    vec3 Colour = phongColour;
         
     Colour *= texture(textureTex, TexCoord).xyz;
+
+    Colour = mix(Fog.Colour, Colour, fogFactor);
 
     FragColor = vec4(Colour, 1.0);
 }
