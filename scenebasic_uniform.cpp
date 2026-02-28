@@ -107,7 +107,7 @@ void SceneBasic_Uniform::initScene()
 
 	skyModel = mat4(1.0f);
 
-	GLuint cubeTex = Texture::loadHdrCubeMap("media/texture/pisa-hdr/pisa");
+	GLuint cubeTex = Texture::loadHdrCubeMap("media/texture/mountainsCubeMap/skybox");
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
