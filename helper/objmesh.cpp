@@ -233,7 +233,6 @@ void ObjMesh::ObjMeshData::generateTangents() {
     std::vector<vec3> tan1Accum(points.size());
     std::vector<vec3> tan2Accum(points.size());
     tangents.resize(points.size());
-
     // Compute the tangent std::vector
     for( GLuint i = 0; i < faces.size(); i += 3 )
     {
@@ -266,14 +265,15 @@ void ObjMesh::ObjMeshData::generateTangents() {
 
     for( GLuint i = 0; i < points.size(); ++i )
     {
-        const vec3 &n = normals[i];
-        vec3 &t1 = tan1Accum[i];
-        vec3 &t2 = tan2Accum[i];
-
-        // Gram-Schmidt orthogonalize
-        tangents[i] = glm::vec4(glm::normalize( t1 - (glm::dot(n,t1) * n) ), 0.0f);
-        // Store handedness in w
-        tangents[i].w = (glm::dot( glm::cross(n,t1), t2 ) < 0.0f) ? -1.0f : 1.0f;
+        if (i < normals.size() - 1) { // had to add this for it to work
+            const vec3& n = normals[i];
+            vec3& t1 = tan1Accum[i];
+            vec3& t2 = tan2Accum[i];
+            // Gram-Schmidt orthogonalize
+            tangents[i] = glm::vec4(glm::normalize(t1 - (glm::dot(n, t1) * n)), 0.0f);
+            // Store handedness in w
+            tangents[i].w = (glm::dot(glm::cross(n, t1), t2) < 0.0f) ? -1.0f : 1.0f;
+        }
     }
 }
 

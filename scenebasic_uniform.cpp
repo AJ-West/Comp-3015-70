@@ -23,6 +23,28 @@ using glm::vec3;
 
 using glm::mat4;
 
+
+struct crossBow {
+	int x = 0;
+	int y = 0;
+	int z = 0;
+	float rotation = 90.0f;
+
+	//int rotateDelay = 6;
+	int delayCount = 0;
+
+	void updateRotation() {
+		//delayCount++;
+		//if (rotateDelay == delayCount) {
+			//delayCount = 0;
+		rotation -= 1.0f;
+		if (rotation == 0.0f) {
+			rotation = 90;
+		}
+		//}
+	}
+} crossBowStruct;
+
 SceneBasic_Uniform::SceneBasic_Uniform() : torus(0.7f, 0.3f, 30, 30), sky(100.0f) {
 	tPrev = 0;
 	angle = 0;
@@ -34,12 +56,16 @@ void SceneBasic_Uniform::initScene()
 	glEnable(GL_DEPTH_TEST);
 	model1 = mat4(1.0f);
 
-	model1 = glm::rotate(model1, glm::radians(-35.0f), vec3(1.0f, 0.0f, 0.0f));
-	model1 = glm::rotate(model1, glm::radians(15.0f), vec3(0.0f, 1.0f, 0.0f));
+	//model1 = glm::rotate(model1, glm::radians(-35.0f), vec3(1.0f, 0.0f, 0.0f));
+	//model1 = glm::rotate(model1, glm::radians(15.0f), vec3(0.0f, 1.0f, 0.0f));
+	model1 = scale(model1, vec3(0.025f, 0.025f, 0.025f));
 
 	model2 = mat4(1.0f);
 
+	model2 = glm::rotate(model2, glm::radians(90.0f), vec3(1.0f, 0.0f, 0.0f));
 	model2 = translate(model2, vec3(2.0f, 0.0f, 0.0f));
+	model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
+	
 
 	view = lookAt(camera->getPosition(), camera->getPosition() + camera->getFront(), camera->getCameraUp());
 
@@ -54,10 +80,12 @@ void SceneBasic_Uniform::initScene()
 
 	setProgDefaults(&prog);
 
-	GLuint brickID = Texture::loadTexture("media/texture/brick1.jpg");
-	GLuint mossID = Texture::loadTexture("media/texture/moss.png");
-	GLuint texture = Texture::loadTexture("media/texture/ogre_diffuse.png");
-	GLuint normalMap = Texture::loadTexture("media/texture/ogre_normalmap.png");
+	GLuint brickID = Texture::loadTexture("media/texture/metal/metal.png");
+	GLuint mossID = Texture::loadTexture("media/texture/rust/rust.png");
+	GLuint texture = Texture::loadTexture("media/texture/wood/wood.png");
+	GLuint normalMap = Texture::loadTexture("media/texture/wood/wood_normalmap.png");
+	//GLuint normalMap = Texture::loadTexture("media/texture/ogre_normalmap.png");
+	//GLuint normalMap = Texture::loadTexture("media/texture/ogre_normalmap.png");
 
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, brickID);
@@ -65,7 +93,9 @@ void SceneBasic_Uniform::initScene()
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, mossID);
 
-	ogre = ObjMesh::load("media/texture/bs_ears.obj", false, true);
+	//ogre = ObjMesh::load("media/texture/bs_ears.obj", false, true);
+	arrow = ObjMesh::load("media/models/arrow.obj", false, true);
+	crossbow = ObjMesh::load("media/models/crossbow.obj", false, true);
 
 	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -174,6 +204,8 @@ void SceneBasic_Uniform::update( float t )
 	if (angle > glm::two_pi<float>()) {
 		angle -= glm::two_pi<float>();
 	}
+
+	crossBowStruct.updateRotation();
 }
 
 void SceneBasic_Uniform::updateCamera(int direction) {
@@ -193,7 +225,7 @@ void SceneBasic_Uniform::resize(int w, int h)
 	glViewport(0, 0, w, h);
 	width = w;
 	height = h;
-	projection = glm::perspective(glm::radians(70.0f), (float)w / h, 0.3f, 100.0f);
+	projection = glm::perspective(glm::radians(70.0f), (float)w / h, 0.01f, 100.0f);
 }
 
 void SceneBasic_Uniform::setMatrices(mat4 model, GLSLProgram* cProg) {
@@ -242,7 +274,7 @@ void SceneBasic_Uniform::pass1() {
 	glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
-	projection = glm::perspective(glm::radians(70.0f), (float)width / height, 0.3f, 100.0f);
+	projection = glm::perspective(glm::radians(70.0f), (float)width / height, 0.01f, 100.0f);
 	drawScene();
 }
 
@@ -296,10 +328,17 @@ void SceneBasic_Uniform::drawScene() {
 	setMatrices(model1, &prog);
 	prog.setUniform("Model", model1);
 	prog.setUniform("normal", false);
-	torus.render();
+	arrow->render();
+	//torus.render();
 
+
+	model2 = mat4(1.0f);
+
+	model2 = glm::rotate(model2, glm::radians(crossBowStruct.rotation), vec3(1.0f, 0.0f, 0.0f));
+	model2 = translate(model2, vec3(2.0f, 0.0f, 0.0f));
+	model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
 	setMatrices(model2, &prog);
 	prog.setUniform("Model", model2);
 	prog.setUniform("normal", true);
-	ogre->render();
+	crossbow->render();
 }

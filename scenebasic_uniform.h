@@ -27,7 +27,8 @@ private:
 
     Torus torus;
 
-    std::unique_ptr<ObjMesh> ogre;
+    std::unique_ptr<ObjMesh> crossbow;
+    std::unique_ptr<ObjMesh> arrow;
 
     SkyBox sky;
 

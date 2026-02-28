@@ -163,7 +163,7 @@ void pass1(){
     vec3 textColour = mix(brickTextColour.rgb, mossTextColour.rgb, mossTextColour.a);
 
     HDRColor *= textColour;
-
+    if(abs(position.z) > Fog.MinDist)
     HDRColor = mix(Fog.Colour, HDRColor, fogFactor);
 }
 
