@@ -67,6 +67,7 @@ public:
 	vec3 getPosition() { return position; }
 	vec3 getFront() { return front; }
 	vec3 getCameraUp() { return cameraUp; }
+	bool getPaused() { return paused; }
 
 	void setCameraFront(vec3 newFront) { front = newFront; }
 

@@ -249,30 +249,32 @@ void SceneBasic_Uniform::update( float t )
 {
 	view = lookAt(camera->getPosition(), camera->getPosition() + camera->getFront(), camera->getCameraUp());
 
-	//updating light position	
+	if (!camera->getPaused()) {
+		//updating light position	
 
-	angle += 0.5f * (t - tPrev);
+		angle += 0.5f * (t - tPrev);
 
-	tPrev = t;
+		tPrev = t;
 
-	if (angle > glm::two_pi<float>()) {
-		angle -= glm::two_pi<float>();
-	}
+		if (angle > glm::two_pi<float>()) {
+			angle -= glm::two_pi<float>();
+		}
 
-	crossBowStruct.updateRotation();
+		crossBowStruct.updateRotation();
 
-	for (int i = 0; i < maxArrows; i++) {
-		if (allArrows[i].inUse) {
-			allArrows[i].update();
-			//can ignore y due to it being clamped at set height
-			float xDist = allArrows[i].pos.x - camera->getPosition().x;
-			float zDist = allArrows[i].pos.z - camera->getPosition().z;
+		for (int i = 0; i < maxArrows; i++) {
+			if (allArrows[i].inUse) {
+				allArrows[i].update();
+				//can ignore y due to it being clamped at set height
+				float xDist = allArrows[i].pos.x - camera->getPosition().x;
+				float zDist = allArrows[i].pos.z - camera->getPosition().z;
 
-			float dist = sqrt(xDist * xDist + zDist * zDist);
-			if (dist < 0.025f) {
-				exit(EXIT_SUCCESS);
+				float dist = sqrt(xDist * xDist + zDist * zDist);
+				if (dist < 0.025f) {
+					exit(EXIT_SUCCESS);
+				}
+
 			}
-			
 		}
 	}
 }
