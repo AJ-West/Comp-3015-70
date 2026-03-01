@@ -7,6 +7,8 @@ using namespace glm;
 
 enum directions { up, left, down, right };
 
+enum {X, Y, Z};
+
 class Camera {
 public:
 	Camera(){}
@@ -26,6 +28,36 @@ public:
 			break;
 		case right:
 			position += normalize(cross(front, cameraUp)) * speed;
+			break;
+		}
+		clamp(Y, 0.5f, 0.5f);
+	}
+
+	void clamp(int dir, int low, int high) {
+		switch (dir) {
+		case X:
+			if (position.x < low) {
+				position.x = low;
+			}
+			else if (position.x > high) {
+				position.x = high;
+			}
+			break;
+		case Y:
+			if (position.y < low) {
+				position.y = low;
+			}
+			else if (position.y > high) {
+				position.y = high;
+			}
+			break;
+		case Z:
+			if (position.z < low) {
+				position.z = low;
+			}
+			else if (position.z > high) {
+				position.z = high;
+			}
 			break;
 		}
 	}
