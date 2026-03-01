@@ -10,10 +10,12 @@ in vec2 TexCoord;
 in vec4 vertTangent;
 
 layout(binding=0) uniform sampler2D HDRTex;
-layout(binding=1) uniform sampler2D brickTex;
-layout(binding=2) uniform sampler2D mossTex;
-layout(binding=3) uniform sampler2D textureTex;
-layout(binding=4) uniform sampler2D normalTex;
+layout(binding=1) uniform sampler2D metalTex;
+layout(binding=2) uniform sampler2D metalNormal;
+layout(binding=3) uniform sampler2D rustTex;
+layout(binding=4) uniform sampler2D rustNormal;
+layout(binding=5) uniform sampler2D woodTex;
+layout(binding=6) uniform sampler2D woodNormal;
 
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec3 HDRColor;
@@ -70,7 +72,7 @@ uniform vec3 camPos;
 const int levels = 4;
 const float scaleFactor = 1.0/levels;
 
-uniform bool normal = false;
+uniform bool arrow = false;
 
 //get position and normal to camera space
 void getCamSpaceValues(out vec3 normal, out vec4 position){
@@ -145,49 +147,49 @@ void calcFog(in vec4 position){
     fogFactor = clamp(fogFactor,0.0,1.0); 
 }
 
-void pass1(){
+void pass1Bow(){
     //Diffuse
-    vec3 norm;
     vec4 position;
-    getCamSpaceValues(norm, position);
+    mat3 objectLocal;
+    calcNormalMapValues(position, objectLocal);
+
+    vec3 metalNorm = texture(metalNormal, TexCoord).xyz;
+    vec3 rustNorm = texture(rustNormal, TexCoord).xyz;
+    vec3 norm = vec3(metalNorm.xy + rustNorm.xy, metalNorm.z * rustNorm.z);
+    norm.xy = 2.0*norm.xy - 1.0;
 
     calcFog(position);
 
-    for (int i=0; i<3; i++){
-        HDRColor += blingPhongModel(i, position.xyz, norm);
+    for (int i=0; i<1; i++){
+        HDRColor += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
     }
 
-    vec4 brickTextColour = texture(brickTex, TexCoord);
-    vec4 mossTextColour = texture(mossTex, TexCoord);
+    vec4 metalTextColour = texture(metalTex, TexCoord);
+    vec4 rustTextColour = texture(rustTex, TexCoord);
 
-    vec3 textColour = mix(brickTextColour.rgb, mossTextColour.rgb, mossTextColour.a);
+    vec3 textColour = mix(metalTextColour.rgb, rustTextColour.rgb, rustTextColour.a);
 
     HDRColor *= textColour;
     if(abs(position.z) > Fog.MinDist)
     HDRColor = mix(Fog.Colour, HDRColor, fogFactor);
 }
 
-void pass1Normal(){
+void pass1Arrow(){
     //Diffuse
     vec4 position;
     mat3 objectLocal;
     calcNormalMapValues(position, objectLocal);
 
-    vec3 norm = texture(normalTex, TexCoord).xyz;
+    vec3 norm = texture(woodNormal, TexCoord).xyz;
     norm.xy = 2.0*norm.xy - 1.0;
 
     calcFog(position);
 
-    for (int i=0; i<3; i++){
+    for (int i=0; i<1; i++){
         HDRColor += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
     }
 
-    vec4 brickTextColour = texture(brickTex, TexCoord);
-    vec4 mossTextColour = texture(mossTex, TexCoord);
-
-    vec3 textColour = mix(brickTextColour.rgb, mossTextColour.rgb, mossTextColour.a);
-
-    HDRColor *= texture(textureTex, TexCoord).xyz;
+    HDRColor *= texture(woodTex, TexCoord).xyz;
 
     HDRColor = mix(Fog.Colour, HDRColor, fogFactor);
 }
@@ -222,10 +224,10 @@ void pass2(){
 }
 
 void main() {
-    if(Pass == 1 && !normal)
-    pass1();
-    if(Pass == 1 && normal)
-    pass1Normal();
+    if(Pass == 1 && !arrow)
+    pass1Bow();
+    if(Pass == 1 && arrow)
+    pass1Arrow();
     else if(Pass == 2)
     pass2();    
 }

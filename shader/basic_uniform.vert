@@ -20,7 +20,6 @@ uniform mat4 Model;
 void main()
 {
     crntPosFrag = vec3(Model * vec4(VertexPosition, 1.0));
-    //crntPosFrag = VertexPosition;
     
     crntNormFrag = VertexNormal;
 

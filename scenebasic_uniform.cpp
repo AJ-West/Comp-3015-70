@@ -58,12 +58,12 @@ void SceneBasic_Uniform::initScene()
 
 	//model1 = glm::rotate(model1, glm::radians(-35.0f), vec3(1.0f, 0.0f, 0.0f));
 	//model1 = glm::rotate(model1, glm::radians(15.0f), vec3(0.0f, 1.0f, 0.0f));
+	model1 = translate(model1, vec3(2.0f, 0.0f, 0.0f));
 	model1 = scale(model1, vec3(0.025f, 0.025f, 0.025f));
 
 	model2 = mat4(1.0f);
 
 	model2 = glm::rotate(model2, glm::radians(90.0f), vec3(1.0f, 0.0f, 0.0f));
-	model2 = translate(model2, vec3(2.0f, 0.0f, 0.0f));
 	model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
 	
 
@@ -80,28 +80,34 @@ void SceneBasic_Uniform::initScene()
 
 	setProgDefaults(&prog);
 
-	GLuint brickID = Texture::loadTexture("media/texture/metal/metal.png");
-	GLuint mossID = Texture::loadTexture("media/texture/rust/rust.png");
-	GLuint texture = Texture::loadTexture("media/texture/wood/wood.png");
-	GLuint normalMap = Texture::loadTexture("media/texture/wood/wood_normalmap.png");
-	//GLuint normalMap = Texture::loadTexture("media/texture/ogre_normalmap.png");
-	//GLuint normalMap = Texture::loadTexture("media/texture/ogre_normalmap.png");
+	GLuint metalTex = Texture::loadTexture("media/texture/metal/metal.png");
+	GLuint metalNormal = Texture::loadTexture("media/texture/metal/metal_normalMap.png");
+	GLuint rustTex = Texture::loadTexture("media/texture/rust/rust.png");
+	GLuint rustNormal = Texture::loadTexture("media/texture/rust/rust_normalMap.png");
+	GLuint woodTex = Texture::loadTexture("media/texture/wood/wood.png");
+	GLuint woodNormal = Texture::loadTexture("media/texture/wood/wood_normalMap.png");
 
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, brickID);
+	glBindTexture(GL_TEXTURE_2D, metalTex);
 
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, mossID);
+	glBindTexture(GL_TEXTURE_2D, metalNormal);
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, rustTex);
+
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, rustNormal);
+
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, woodTex);
+
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, woodNormal);
 
 	//ogre = ObjMesh::load("media/texture/bs_ears.obj", false, true);
 	arrow = ObjMesh::load("media/models/arrow.obj", false, true);
 	crossbow = ObjMesh::load("media/models/crossbow.obj", false, true);
-
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glActiveTexture(GL_TEXTURE4);
-	glBindTexture(GL_TEXTURE_2D, normalMap);
 
 	skyProg.use();
 
@@ -154,11 +160,11 @@ void SceneBasic_Uniform::setProgDefaults(GLSLProgram* cProg) {
 		z = 2.0f * sinf((glm::two_pi<float>() / 3) * i);
 		cProg->setUniform(name.str().c_str(), view * glm::vec4(x, 1.2f, z + 1.0f, 1.0f));
 	}
-	//cProg->setUniform("Lights[0].Ld", vec3(5.0f, 5.0f, 5.0f));
-	//cProg->setUniform("Lights[0].La", vec3(0.2f, 0.2f, 0.2f));
-	//cProg->setUniform("Lights[0].Ls", vec3(5.0f, 5.0f, 5.0f));
+	cProg->setUniform("Lights[0].Ld", vec3(5.0f, 5.0f, 5.0f));
+	cProg->setUniform("Lights[0].La", vec3(0.2f, 0.2f, 0.2f));
+	cProg->setUniform("Lights[0].Ls", vec3(5.0f, 5.0f, 5.0f));
 
-	cProg->setUniform("Lights[0].Ld", vec3(0.0f, 0.0f, 0.8f));
+	/*cProg->setUniform("Lights[0].Ld", vec3(0.0f, 0.0f, 0.8f));
 	cProg->setUniform("Lights[0].La", vec3(0.0f, 0.0f, 0.2f));
 	cProg->setUniform("Lights[0].Ls", vec3(0.0f, 0.0f, 0.8f));
 
@@ -168,7 +174,7 @@ void SceneBasic_Uniform::setProgDefaults(GLSLProgram* cProg) {
 
 	cProg->setUniform("Lights[2].Ld", vec3(0.8f, 0.0f, 0.0f));
 	cProg->setUniform("Lights[2].La", vec3(0.2f, 0.0f, 0.0f));
-	cProg->setUniform("Lights[2].Ls", vec3(0.8f, 0.0f, 0.0f));
+	cProg->setUniform("Lights[2].Ls", vec3(0.8f, 0.0f, 0.0f));*/
 
 	cProg->setUniform("Fog.MaxDist", 10.0f);
 	cProg->setUniform("Fog.MinDist", 0.0f);
@@ -328,7 +334,7 @@ void SceneBasic_Uniform::drawScene() {
 
 	setMatrices(model1, &prog);
 	prog.setUniform("Model", model1);
-	prog.setUniform("normal", false);
+	prog.setUniform("arrow", true);
 	arrow->render();
 	//torus.render();
 
@@ -336,10 +342,10 @@ void SceneBasic_Uniform::drawScene() {
 	model2 = mat4(1.0f);
 
 	model2 = glm::rotate(model2, glm::radians(crossBowStruct.rotation), vec3(1.0f, 0.0f, 0.0f));
-	model2 = translate(model2, vec3(2.0f, 0.0f, 0.0f));
+	//model2 = translate(model2, vec3(2.0f, 0.0f, 0.0f));
 	model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
 	setMatrices(model2, &prog);
 	prog.setUniform("Model", model2);
-	prog.setUniform("normal", true);
+	prog.setUniform("arrow", false);
 	crossbow->render();
 }
