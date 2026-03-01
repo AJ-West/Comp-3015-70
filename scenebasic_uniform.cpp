@@ -23,25 +23,76 @@ using glm::vec3;
 
 using glm::mat4;
 
+const int maxArrows = 100;
 
-struct crossBow {
-	int x = 0;
-	int y = 0;
-	int z = 0;
+struct Arrows {
+	vec3 pos = vec3(0.0f, 0.0f, 0.0f);
 	float rotation = 90.0f;
 
-	//int rotateDelay = 6;
+	int direction = 0;
+
+	bool inUse = false;
+
+	float speed = 0.05f;
+
+	int lifeTime = 0;
+
+	bool getInUse() { return inUse; }
+
+	void init(vec3 position, int dir) {
+		pos = position;
+		direction = dir;
+		inUse = true;
+		lifeTime = 60;
+	}
+
+	void update() {
+		switch (direction)
+		{
+		case(0):
+			pos.x += speed;
+			break;
+		case(1):
+			pos.z -= speed;
+			break;
+		case(2):
+			pos.x -= speed;
+			break;
+		case(3):
+			pos.z += speed;
+			break;
+		}
+		lifeTime -= 1;
+		if (lifeTime == 0) {
+			inUse = false;
+		}
+	}
+}allArrows[maxArrows];
+
+struct crossBow {
+	vec3 pos = vec3(0.0f, 0.0f, 0.0f);
+	vec3 rotation = vec3(0.0f, 90.0f, 0.0f);
+
+	int direction = 3;
+
 	int delayCount = 0;
 
 	void updateRotation() {
-		//delayCount++;
-		//if (rotateDelay == delayCount) {
-			//delayCount = 0;
-		rotation -= 1.0f;
-		if (rotation == 0.0f) {
-			rotation = 90;
+		rotation.y -= 1.0f;
+		if (rotation.y == 0.0f) {
+			rotation.y = 90;
 		}
-		//}
+		else if (rotation.y == 5.0f) { // delay to fire the arrow first to make it look more realistic
+			spawnArrow();
+		}
+	}
+
+	void spawnArrow() {
+		for (int i = 0; i < maxArrows; i++) {
+			if (!allArrows[i].inUse) {
+				allArrows[i].init(pos, direction);
+			}
+		}
 	}
 } crossBowStruct;
 
@@ -56,8 +107,6 @@ void SceneBasic_Uniform::initScene()
 	glEnable(GL_DEPTH_TEST);
 	model1 = mat4(1.0f);
 
-	//model1 = glm::rotate(model1, glm::radians(-35.0f), vec3(1.0f, 0.0f, 0.0f));
-	//model1 = glm::rotate(model1, glm::radians(15.0f), vec3(0.0f, 1.0f, 0.0f));
 	model1 = translate(model1, vec3(2.0f, 0.0f, 0.0f));
 	model1 = scale(model1, vec3(0.025f, 0.025f, 0.025f));
 
@@ -105,7 +154,6 @@ void SceneBasic_Uniform::initScene()
 	glActiveTexture(GL_TEXTURE6);
 	glBindTexture(GL_TEXTURE_2D, woodNormal);
 
-	//ogre = ObjMesh::load("media/texture/bs_ears.obj", false, true);
 	arrow = ObjMesh::load("media/models/arrow.obj", false, true);
 	crossbow = ObjMesh::load("media/models/crossbow.obj", false, true);
 
@@ -212,6 +260,21 @@ void SceneBasic_Uniform::update( float t )
 	}
 
 	crossBowStruct.updateRotation();
+
+	for (int i = 0; i < maxArrows; i++) {
+		if (allArrows[i].inUse) {
+			allArrows[i].update();
+			//can ignore y due to it being clamped at set height
+			float xDist = allArrows[i].pos.x - camera->getPosition().x;
+			float zDist = allArrows[i].pos.z - camera->getPosition().z;
+
+			float dist = sqrt(xDist * xDist + zDist * zDist);
+			if (dist < 0.025f) {
+				exit(EXIT_SUCCESS);
+			}
+			
+		}
+	}
 }
 
 void SceneBasic_Uniform::updateCamera(int direction) {
@@ -332,17 +395,33 @@ void SceneBasic_Uniform::drawScene() {
 		prog.setUniform(name.str().c_str(), view * glm::vec4(x * cos(angle), 1.2f, (z + 1.0f) * sin(angle), 1.0f));
 	}
 
-	setMatrices(model1, &prog);
-	prog.setUniform("Model", model1);
 	prog.setUniform("arrow", true);
-	arrow->render();
+	for (int i = 0; i < maxArrows; i++) {
+		if (allArrows[i].inUse) {
+			model1 = mat4(1.0f);
+
+			
+			model1 = translate(model1, allArrows[i].pos);
+			model1 = rotate(model1, radians(allArrows[i].rotation * allArrows[i].direction), vec3(0.0f, 1.0f, 0.0f));
+			model1 = scale(model1, vec3(0.025f, 0.025f, 0.025f));
+			setMatrices(model1, &prog);
+			prog.setUniform("Model", model1);
+			
+			arrow->render();
+		}
+	}
+
+	//setMatrices(model1, &prog);
+	//prog.setUniform("Model", model1);
+	//prog.setUniform("arrow", true);
+	//arrow->render();
 	//torus.render();
 
 
 	model2 = mat4(1.0f);
 
-	model2 = glm::rotate(model2, glm::radians(crossBowStruct.rotation), vec3(1.0f, 0.0f, 0.0f));
-	//model2 = translate(model2, vec3(2.0f, 0.0f, 0.0f));
+	model2 = glm::rotate(model2, glm::radians(crossBowStruct.rotation.y), vec3(1.0f, 0.0f, 0.0f));
+	model2 = translate(model2, crossBowStruct.pos);
 	model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
 	setMatrices(model2, &prog);
 	prog.setUniform("Model", model2);
