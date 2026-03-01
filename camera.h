@@ -30,7 +30,9 @@ public:
 			position += normalize(cross(front, cameraUp)) * speed;
 			break;
 		}
-		clamp(Y, 0.5f, 0.5f);
+		if (!paused) {
+			clamp(Y, 0.5f, 0.5f);
+		}
 	}
 
 	void clamp(int dir, int low, int high) {
@@ -68,8 +70,12 @@ public:
 
 	void setCameraFront(vec3 newFront) { front = newFront; }
 
+	void togglePaused() { paused = !paused; }
+
 private:
 	float speed = 0.01f;
+
+	bool paused = false;
 
 	//Relative position within world space
 	vec3 position = vec3(0.0f, 0.0f, 0.5f);

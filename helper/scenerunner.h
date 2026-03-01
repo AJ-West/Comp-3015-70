@@ -194,5 +194,7 @@ private:
             scene.updateCamera(down);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             scene.updateCamera(right);
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+            scene.updateCamera(5);
     }
 };

@@ -209,6 +209,7 @@ void SceneBasic_Uniform::update( float t )
 }
 
 void SceneBasic_Uniform::updateCamera(int direction) {
+	if (direction == 5) { camera->togglePaused(); }
 	camera->updatePosition(direction);
 	view = lookAt(camera->getPosition(), camera->getPosition() + camera->getFront(), camera->getCameraUp());
 }

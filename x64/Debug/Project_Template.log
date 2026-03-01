@@ -1,148 +1,148 @@
 ﻿  global.cpp
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(33,18): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(36,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'global.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(33,12): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(36,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'global.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:         ]
   (compiling source file 'global.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:         ]
   (compiling source file 'global.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:         ]
   (compiling source file 'global.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:         ]
   (compiling source file 'global.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:         ]
   (compiling source file 'global.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:         ]
   (compiling source file 'global.cpp')
   
   main.cpp
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(33,18): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(36,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(33,12): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(36,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'main.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:         ]
   (compiling source file 'main.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:         ]
   (compiling source file 'main.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:         ]
   (compiling source file 'main.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:         ]
   (compiling source file 'main.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:         ]
   (compiling source file 'main.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:         ]
   (compiling source file 'main.cpp')
   
   scenebasic_uniform.cpp
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(33,18): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(36,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'scenebasic_uniform.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(33,12): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(36,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'scenebasic_uniform.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(40,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(44,18): warning C4244:         ]
   (compiling source file 'scenebasic_uniform.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(43,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(47,18): warning C4244:         ]
   (compiling source file 'scenebasic_uniform.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(48,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(52,18): warning C4244:         ]
   (compiling source file 'scenebasic_uniform.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(51,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(55,18): warning C4244:         ]
   (compiling source file 'scenebasic_uniform.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(56,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(60,18): warning C4244:         ]
   (compiling source file 'scenebasic_uniform.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:         with
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:         [
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:             T=float
-C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(59,18): warning C4244:         ]
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:         with
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:         [
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:             T=float
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(63,18): warning C4244:         ]
   (compiling source file 'scenebasic_uniform.cpp')
   
   Generating Code...
