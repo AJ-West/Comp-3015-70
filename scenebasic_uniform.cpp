@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <ctime>
+
 #include <string>
 using std::string;
 
@@ -72,7 +74,7 @@ struct Arrows {
 class crossBow {
 private:
 	vec3 pos;
-	vec3 rotation = vec3(0.0f, 90.0f, 0.0f);
+	float rotation = 90.0f;
 
 	int dir;
 
@@ -80,14 +82,15 @@ private:
 
 public:
 	crossBow(vec3 position, int direction):pos(position), dir(direction) {
+		rotation = rand() % 91;
 	}
 
 	void updateRotation() {
-		rotation.y -= 1.0f;
-		if (rotation.y == 0.0f) {
-			rotation.y = 90;
+		rotation -= 1.0f;
+		if (rotation <= 0.0f) {
+			rotation = 90;
 		}
-		else if (rotation.y == 5.0f) { // delay to fire the arrow first to make it look more realistic
+		else if (rotation == 5.0f) { // delay to fire the arrow first to make it look more realistic
 			spawnArrow();
 		}
 	}
@@ -103,7 +106,7 @@ public:
 	}
 
 	vec3 getPos() { return pos; }
-	vec3 getRotation() { return rotation; }
+	float getRotation() { return rotation; }
 	int getDir() { return dir; }
 };
 
@@ -114,6 +117,8 @@ SceneBasic_Uniform::SceneBasic_Uniform() : torus(0.7f, 0.3f, 30, 30), sky(100.0f
 
 void SceneBasic_Uniform::initScene()
 {
+	std::srand(time(0));
+
     compile();
 	glEnable(GL_DEPTH_TEST);
 	model1 = mat4(1.0f);
@@ -312,7 +317,7 @@ void SceneBasic_Uniform::update( float t )
 				float zDist = allArrows[i].pos.z - camera->getPosition().z;
 
 				float dist = sqrt(xDist * xDist + zDist * zDist);
-				if (dist < 0.025f) {
+				if (dist < 0.035f) {
 					exit(EXIT_SUCCESS);
 				}
 
@@ -467,7 +472,7 @@ void SceneBasic_Uniform::drawScene() {
 		
 		model2 = translate(model2, crossbows[i]->getPos());
 		model2 = rotate(model2, radians(90.0f * (crossbows[i]->getDir()+1)), vec3(0.0f, 1.0f, 0.0f));
-		model2 = glm::rotate(model2, glm::radians(crossbows[i]->getRotation().y), vec3(1.0f, 0.0f, 0.0f));
+		model2 = glm::rotate(model2, glm::radians(crossbows[i]->getRotation()), vec3(1.0f, 0.0f, 0.0f));
 		model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
 		setMatrices(model2, &prog);
 		prog.setUniform("Model", model2);		

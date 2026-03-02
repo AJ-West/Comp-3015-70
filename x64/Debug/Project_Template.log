@@ -47,4 +47,6 @@ C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(61,18): warning C
 C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\camera.h(61,18): warning C4244:         ]
   (compiling source file 'scenebasic_uniform.cpp')
   
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\scenebasic_uniform.cpp(85,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\scenebasic_uniform.cpp(120,17): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Project_Template.vcxproj -> C:\Users\gamin\Documents\Final year uni\Comp-3015-30-\x64\Debug\Project_Template.exe
