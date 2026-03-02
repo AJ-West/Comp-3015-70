@@ -31,7 +31,9 @@ public:
 			break;
 		}
 		if (!paused) {
+			clamp(X, 0.0f, 4.0f);
 			clamp(Y, 0.5f, 0.5f);
+			clamp(Z, 0.0f, 5.0f);
 		}
 	}
 
@@ -79,7 +81,7 @@ private:
 	bool paused = false;
 
 	//Relative position within world space
-	vec3 position = vec3(0.0f, 0.0f, 0.5f);
+	vec3 position = vec3(2.5f, 0.0f, 2.5f);
 	//The direction of travel
 	vec3 front = vec3(0.0f, 0.0f, -1.0f);
 	//Up position within world space
