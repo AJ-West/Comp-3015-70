@@ -246,16 +246,17 @@ void SceneBasic_Uniform::setUpFullScreenQuad() {
 
 void SceneBasic_Uniform::setProgDefaults(GLSLProgram* cProg) {
 	float x, z;
-	for (int i = 0; i < 3; i++) {
+	/*for (int i = 0; i < 3; i++) {
 		std::stringstream name;
 		name << "Lights[" << i << "].Position";
 		x = 2.0f * cosf((glm::two_pi<float>() / 3) * i);
 		z = 2.0f * sinf((glm::two_pi<float>() / 3) * i);
 		cProg->setUniform(name.str().c_str(), view * glm::vec4(x, 1.2f, z + 1.0f, 1.0f));
-	}
-	cProg->setUniform("Lights[0].Ld", vec3(5.0f, 5.0f, 5.0f));
+	}*/
+	cProg->setUniform("Lights[0].Position", vec4(2.5f, 1.0f, 2.5f, 1.0f));
+	cProg->setUniform("Lights[0].Ld", vec3(1.0f, 1.0f, 1.0f));
 	cProg->setUniform("Lights[0].La", vec3(0.2f, 0.2f, 0.2f));
-	cProg->setUniform("Lights[0].Ls", vec3(5.0f, 5.0f, 5.0f));
+	cProg->setUniform("Lights[0].Ls", vec3(1.0f, 1.0f, 1.0f));
 
 	/*cProg->setUniform("Lights[0].Ld", vec3(0.0f, 0.0f, 0.8f));
 	cProg->setUniform("Lights[0].La", vec3(0.0f, 0.0f, 0.2f));
@@ -270,7 +271,7 @@ void SceneBasic_Uniform::setProgDefaults(GLSLProgram* cProg) {
 	cProg->setUniform("Lights[2].Ls", vec3(0.8f, 0.0f, 0.0f));*/
 
 	cProg->setUniform("Fog.MaxDist", 10.0f);
-	cProg->setUniform("Fog.MinDist", 0.0f);
+	cProg->setUniform("Fog.MinDist", 1.0f);
 	cProg->setUniform("Fog.Colour", vec3(0.0f, 0.0f, 0.0f));
 }
 
@@ -435,14 +436,14 @@ void SceneBasic_Uniform::drawScene() {
 
 	prog.use();
 
-	float x, z;
+	/*float x, z;
 	for (int i = 0; i < 3; i++) {
 		std::stringstream name;
 		name << "Lights[" << i << "].Position";
 		x = 2.0f * cosf((glm::two_pi<float>() / 3) * i);
 		z = 2.0f * sinf((glm::two_pi<float>() / 3) * i);
 		prog.setUniform(name.str().c_str(), view * glm::vec4(x * cos(angle), 1.2f, (z + 1.0f) * sin(angle), 1.0f));
-	}
+	}*/
 
 	prog.setUniform("arrow", true);
 	for (int i = 0; i < maxArrows; i++) {
@@ -451,20 +452,13 @@ void SceneBasic_Uniform::drawScene() {
 			
 			model1 = translate(model1, allArrows[i].pos);
 			model1 = rotate(model1, radians(allArrows[i].rotation * allArrows[i].direction), vec3(0.0f, 1.0f, 0.0f));
-			model1 = scale(model1, vec3(0.05f, 0.05f, 0.05f));
+			model1 = scale(model1, vec3(0.01f, 0.01f, 0.01f));
 			setMatrices(model1, &prog);
 			prog.setUniform("Model", model1);
 			
 			arrow->render();
 		}
 	}
-
-	//setMatrices(model1, &prog);
-	//prog.setUniform("Model", model1);
-	//prog.setUniform("arrow", true);
-	//arrow->render();
-	//torus.render();
-
 
 	prog.setUniform("arrow", false);
 	for (int i = 0; i < 16; i++) {

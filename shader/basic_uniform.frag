@@ -69,7 +69,7 @@ uniform mat3 NormalMatrix;
 uniform vec3 camPos;
 
 // for toon shading
-const int levels = 4;
+const int levels = 10;
 const float scaleFactor = 1.0/levels;
 
 uniform bool arrow = false;
@@ -81,26 +81,6 @@ void getCamSpaceValues(out vec3 normal, out vec4 position){
     position = ModelViewMatrix * vec4(crntPosFrag, 1.0);
 }
 
-vec3 blingPhongModel(int light, vec3 position, vec3 normal){
-    //Ambient
-    vec3 ambient = Lights[light].La;
-    
-    vec3 lightDir = normalize(vec3(Lights[light].Position.xyz - position));
-    vec3 viewDir = normalize(camPos - position);
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    float sDotn = max(dot(halfwayDir, normal), 0.0);
-    vec3 diffuse = Lights[light].Ld*floor(sDotn*levels)*scaleFactor;
-
-    /*vec3 specular = vec3(0.0);
-    if (sDotn>0.0){
-        vec3 reflectDir = reflect(-lightDir,normal);
-        float specAmount = pow(max(dot(reflectDir, normal), 0.0), Material.Shininess);
-        specular = specAmount * Lights[light].Ls;
-    }*/
-
-    return ambient + diffuse;// + specular;
-}
-
 vec3 blingPhongModelNormal(int light, vec3 position, vec3 normal, mat3 objectLocal){
     //Ambient
     vec3 ambient = Lights[light].La;
@@ -110,15 +90,16 @@ vec3 blingPhongModelNormal(int light, vec3 position, vec3 normal, mat3 objectLoc
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float sDotn = max(dot(halfwayDir, normal), 0.0);
     vec3 diffuse = Lights[light].Ld*floor(sDotn*levels)*scaleFactor;
+    //vec3 diffuse = Lights[light].Ld*sDotn;
 
-    /*vec3 specular = vec3(0.0);
+    vec3 specular = vec3(0.0);
     if (sDotn>0.0){
         vec3 reflectDir = reflect(-lightDir,normal);
         float specAmount = pow(max(dot(reflectDir, normal), 0.0), Material.Shininess);
         specular = specAmount * Lights[light].Ls;
-    }*/
+    }
 
-    return ambient + diffuse;// + specular;
+    return ambient + diffuse + specular;
 }
 
 void calcNormalMapValues(out vec4 position, out mat3 toObjectLocal){
@@ -156,6 +137,7 @@ void pass1Bow(){
     vec3 metalNorm = texture(metalNormal, TexCoord).xyz;
     vec3 rustNorm = texture(rustNormal, TexCoord).xyz;
     vec3 norm = vec3(metalNorm.xy + rustNorm.xy, metalNorm.z * rustNorm.z);
+    //vec3 norm = texture(metalNormal, TexCoord).xyz;
     norm.xy = 2.0*norm.xy - 1.0;
 
     calcFog(position);
@@ -168,6 +150,7 @@ void pass1Bow(){
     vec4 rustTextColour = texture(rustTex, TexCoord);
 
     vec3 textColour = mix(metalTextColour.rgb, rustTextColour.rgb, rustTextColour.a);
+    //vec3 textColour = texture(metalTex, TexCoord).rgb;
 
     HDRColor *= textColour;
     if(abs(position.z) > Fog.MinDist)
@@ -189,8 +172,8 @@ void pass1Arrow(){
         HDRColor += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
     }
 
-    HDRColor *= texture(woodTex, TexCoord).xyz;
-
+    HDRColor *= texture(woodTex, TexCoord).rgb;
+    if(abs(position.z) > Fog.MinDist)
     HDRColor = mix(Fog.Colour, HDRColor, fogFactor);
 }
 
@@ -217,10 +200,13 @@ void pass2(){
     xyzCol.z = (L*(1-xyYCol.x-xyYCol.y))/xyYCol.y;
 
     //Convert back to RGB and send outpput to buffer
-    if(DoToneMap)
-        FragColor = vec4(xyz2rgb * xyzCol, 1.0);
-    else
-        FragColor = vec4(Colour, 1.0);    
+    if(DoToneMap){
+        Colour = xyz2rgb * xyzCol;
+        //Colour.x = floor(Colour.x * levels)*scaleFactor;
+        //Colour.y = floor(Colour.y * levels)*scaleFactor;
+        //Colour.z = floor(Colour.z * levels)*scaleFactor;
+    }
+    FragColor = vec4(Colour, 1.0);    
 }
 
 void main() {
