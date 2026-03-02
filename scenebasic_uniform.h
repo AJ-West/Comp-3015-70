@@ -27,8 +27,6 @@ private:
     GLuint quad;
     GLuint hdrTex, avgTex;
 
-    Torus torus;
-
     std::unique_ptr<ObjMesh> crossbow;
     std::unique_ptr<ObjMesh> arrow;
 

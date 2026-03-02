@@ -13,3 +13,7 @@ bool mouseFirstEntry = true;
 //Positions of camera from given last frame
 float cameraLastXPos = 800.0f / 2.0f;
 float cameraLastYPos = 600.0f / 2.0f;
+
+const int maxArrows = 100;
+
+Arrows allArrows[maxArrows];

@@ -20,97 +20,13 @@ using std::endl;
 #include "media/texture/texture.h"
 
 #include "global.h"
+#include "crossbow.h"
 
 using glm::vec3;
 
 using glm::mat4;
 
-const int maxArrows = 100;
-
-struct Arrows {
-	vec3 pos = vec3(0.0f, 0.0f, 0.0f);
-	float rotation = 90.0f;
-
-	int direction = 0;
-
-	bool inUse = false;
-
-	float speed = 0.05f;
-
-	int lifeTime = 0;
-
-	bool getInUse() { return inUse; }
-
-	void init(vec3 position, int dir) {
-		pos = position;
-		direction = dir;
-		inUse = true;
-		lifeTime = 60;
-	}
-
-	void update() {
-		switch (direction)
-		{
-		case(0):
-			pos.x += speed;
-			break;
-		case(1):
-			pos.z -= speed;
-			break;
-		case(2):
-			pos.x -= speed;
-			break;
-		case(3):
-			pos.z += speed;
-			break;
-		}
-		lifeTime -= 1;
-		if (lifeTime == 0) {
-			inUse = false;
-		}
-	}
-}allArrows[maxArrows];
-
-class crossBow {
-private:
-	vec3 pos;
-	float rotation = 90.0f;
-
-	int dir;
-
-	int delayCount = 0;
-
-public:
-	crossBow(vec3 position, int direction):pos(position), dir(direction) {
-		rotation = rand() % 91;
-	}
-
-	void updateRotation() {
-		rotation -= 1.0f;
-		if (rotation <= 0.0f) {
-			rotation = 90;
-		}
-		else if (rotation == 5.0f) { // delay to fire the arrow first to make it look more realistic
-			spawnArrow();
-		}
-	}
-
-	void spawnArrow() {
-		
-		for (int i = 0; i < maxArrows; i++) {
-			if (!allArrows[i].inUse) {
-				allArrows[i].init(pos, dir);
-				break;
-			}
-		}
-	}
-
-	vec3 getPos() { return pos; }
-	float getRotation() { return rotation; }
-	int getDir() { return dir; }
-};
-
-SceneBasic_Uniform::SceneBasic_Uniform() : torus(0.7f, 0.3f, 30, 30), sky(100.0f) {
+SceneBasic_Uniform::SceneBasic_Uniform() : sky(100.0f) {
 	tPrev = 0;
 	angle = 0;
 }
@@ -121,21 +37,25 @@ void SceneBasic_Uniform::initScene()
 
     compile();
 	glEnable(GL_DEPTH_TEST);
+
+	//sets up models for default arrow
 	model1 = mat4(1.0f);
 
 	model1 = translate(model1, vec3(2.0f, 0.0f, 0.0f));
 	model1 = scale(model1, vec3(0.025f, 0.025f, 0.025f));
 
+	//sets up default model for crossbow
 	model2 = mat4(1.0f);
 
 	model2 = glm::rotate(model2, glm::radians(90.0f), vec3(1.0f, 0.0f, 0.0f));
-	model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
-	
+	model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));	
 
+	// set view to inital camera position
 	view = lookAt(camera->getPosition(), camera->getPosition() + camera->getFront(), camera->getCameraUp());
 
 	projection = mat4(1.0f);
 
+	// sets up models and textures
 	prog.use();
 
 	setupFBO();
@@ -145,6 +65,7 @@ void SceneBasic_Uniform::initScene()
 
 	setProgDefaults(&prog);
 
+	//loads all textures that will be required
 	GLuint metalTex = Texture::loadTexture("media/texture/metal/metal.png");
 	GLuint metalNormal = Texture::loadTexture("media/texture/metal/metal_normalMap.png");
 	GLuint rustTex = Texture::loadTexture("media/texture/rust/rust.png");
@@ -170,20 +91,22 @@ void SceneBasic_Uniform::initScene()
 	glActiveTexture(GL_TEXTURE6);
 	glBindTexture(GL_TEXTURE_2D, woodNormal);
 
+	// loads required models
 	arrow = ObjMesh::load("media/models/arrow.obj", false, true);
 	crossbow = ObjMesh::load("media/models/crossbow.obj", false, true);
 
+	//sets up skybox
 	skyProg.use();
 
 	skyModel = mat4(1.0f);
 
+	//loads cubemap texture
 	GLuint cubeTex = Texture::loadHdrCubeMap("media/texture/mountainsCubeMap/skybox");
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
 
-	prog.use();
-
+	// Spawns the crossbows along each side in the required positions with the correct direction to face
 	int side = -1;
 	vec3 pos;
 	for (int i = 0; i < 16; i++) {
@@ -245,31 +168,33 @@ void SceneBasic_Uniform::setUpFullScreenQuad() {
 }
 
 void SceneBasic_Uniform::setProgDefaults(GLSLProgram* cProg) {
+	//sets up inital location for moving lights (green and brown)
 	float x, z;
-	/*for (int i = 0; i < 3; i++) {
+	for (int i = 1; i < 3; i++) {
 		std::stringstream name;
 		name << "Lights[" << i << "].Position";
-		x = 2.0f * cosf((glm::two_pi<float>() / 3) * i);
-		z = 2.0f * sinf((glm::two_pi<float>() / 3) * i);
+		x = 5.0f * cosf((glm::two_pi<float>() / 3) * i);
+		z = 5.0f * sinf((glm::two_pi<float>() / 3) * i);
 		cProg->setUniform(name.str().c_str(), view * glm::vec4(x, 1.2f, z + 1.0f, 1.0f));
-	}*/
+	}
+	//position and colour of stationary main light
 	cProg->setUniform("Lights[0].Position", vec4(2.5f, 1.0f, 2.5f, 1.0f));
 	cProg->setUniform("Lights[0].Ld", vec3(1.0f, 1.0f, 1.0f));
 	cProg->setUniform("Lights[0].La", vec3(0.2f, 0.2f, 0.2f));
 	cProg->setUniform("Lights[0].Ls", vec3(1.0f, 1.0f, 1.0f));
 
-	/*cProg->setUniform("Lights[0].Ld", vec3(0.0f, 0.0f, 0.8f));
-	cProg->setUniform("Lights[0].La", vec3(0.0f, 0.0f, 0.2f));
-	cProg->setUniform("Lights[0].Ls", vec3(0.0f, 0.0f, 0.8f));
+	//colours of moving lights
+	//green
+	cProg->setUniform("Lights[1].Ld", vec3(0.0f, 0.4f, 0.0f));
+	cProg->setUniform("Lights[1].La", vec3(0.0f, 0.1f, 0.0f));
+	cProg->setUniform("Lights[1].Ls", vec3(0.0f, 0.4f, 0.0f));
+	
+	//brown
+	cProg->setUniform("Lights[2].Ld", vec3(0.3f, 0.1f, 0.1f));
+	cProg->setUniform("Lights[2].La", vec3(0.15f, 0.05f, 0.05f));
+	cProg->setUniform("Lights[2].Ls", vec3(0.3f, 0.1f, 0.1f));
 
-	cProg->setUniform("Lights[1].Ld", vec3(0.0f, 0.8f, 0.0f));
-	cProg->setUniform("Lights[1].La", vec3(0.0f, 0.2f, 0.0f));
-	cProg->setUniform("Lights[1].Ls", vec3(0.0f, 0.8f, 0.0f));
-
-	cProg->setUniform("Lights[2].Ld", vec3(0.8f, 0.0f, 0.0f));
-	cProg->setUniform("Lights[2].La", vec3(0.2f, 0.0f, 0.0f));
-	cProg->setUniform("Lights[2].Ls", vec3(0.8f, 0.0f, 0.0f));*/
-
+	//Setting up variables for the fog
 	cProg->setUniform("Fog.MaxDist", 10.0f);
 	cProg->setUniform("Fog.MinDist", 1.0f);
 	cProg->setUniform("Fog.Colour", vec3(0.0f, 0.0f, 0.0f));
@@ -293,11 +218,11 @@ void SceneBasic_Uniform::compile()
 
 void SceneBasic_Uniform::update( float t )
 {
+	// update view for current camera position
 	view = lookAt(camera->getPosition(), camera->getPosition() + camera->getFront(), camera->getCameraUp());
 
-	if (!camera->getPaused()) {
+	if (!camera->getPaused()) { // only runs if game isn't paused
 		//updating light position	
-
 		angle += 0.5f * (t - tPrev);
 
 		tPrev = t;
@@ -306,10 +231,12 @@ void SceneBasic_Uniform::update( float t )
 			angle -= glm::two_pi<float>();
 		}
 
+		//update all crossbow's rotation
 		for (int i = 0; i < 16; i++) {
 			crossbows[i]->updateRotation();
 		}
 
+		// updates position for all arrows and checks if they hit the player
 		for (int i = 0; i < maxArrows; i++) {
 			if (allArrows[i].inUse) {
 				allArrows[i].update();
@@ -328,9 +255,8 @@ void SceneBasic_Uniform::update( float t )
 }
 
 void SceneBasic_Uniform::updateCamera(int direction) {
-	if (direction == 5) { camera->togglePaused(); }
+	if (direction == paused) { camera->togglePaused(); } // if p is pressed
 	camera->updatePosition(direction);
-	view = lookAt(camera->getPosition(), camera->getPosition() + camera->getFront(), camera->getCameraUp());
 }
 
 void SceneBasic_Uniform::render()
@@ -388,6 +314,7 @@ void SceneBasic_Uniform::setupFBO() {
 }
 
 void SceneBasic_Uniform::pass1() {
+	// Do first pass to calculate scene lighting and textures to be passed to calculate HDR
 	prog.setUniform("Pass", 1);
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	glViewport(0, 0, width, height);
@@ -415,6 +342,7 @@ void SceneBasic_Uniform::pass2() {
 }
 
 void SceneBasic_Uniform::computeLogAveLuminance() {
+	// Works out the average luminance for a pixel based off its surrounding pixels
 	int size = width * height;
 	std::vector<GLfloat> texData(size * 3);
 	glActiveTexture(GL_TEXTURE0);
@@ -429,6 +357,7 @@ void SceneBasic_Uniform::computeLogAveLuminance() {
 }
 
 void SceneBasic_Uniform::drawScene() {
+	//draws skybox
 	skyProg.use();
 	skyModel = mat4(1.0f);
 	skyProg.setUniform("MVP", projection * view * skyModel);
@@ -436,20 +365,22 @@ void SceneBasic_Uniform::drawScene() {
 
 	prog.use();
 
-	/*float x, z;
-	for (int i = 0; i < 3; i++) {
+	//updates position of the moving lights
+	float x, z;
+	for (int i = 1; i < 3; i++) {
 		std::stringstream name;
 		name << "Lights[" << i << "].Position";
-		x = 2.0f * cosf((glm::two_pi<float>() / 3) * i);
-		z = 2.0f * sinf((glm::two_pi<float>() / 3) * i);
+		x = 5.0f * cosf((glm::two_pi<float>() / 3) * i);
+		z = 5.0f * sinf((glm::two_pi<float>() / 3) * i);
 		prog.setUniform(name.str().c_str(), view * glm::vec4(x * cos(angle), 1.2f, (z + 1.0f) * sin(angle), 1.0f));
-	}*/
+	}
 
+	//sets to true to know which textures to render
 	prog.setUniform("arrow", true);
+	//render each arrow
 	for (int i = 0; i < maxArrows; i++) {
 		if (allArrows[i].inUse) {
-			model1 = mat4(1.0f);
-			
+			model1 = mat4(1.0f);			
 			model1 = translate(model1, allArrows[i].pos);
 			model1 = rotate(model1, radians(allArrows[i].rotation * allArrows[i].direction), vec3(0.0f, 1.0f, 0.0f));
 			model1 = scale(model1, vec3(0.01f, 0.01f, 0.01f));
@@ -461,9 +392,9 @@ void SceneBasic_Uniform::drawScene() {
 	}
 
 	prog.setUniform("arrow", false);
+	//render each crossbow
 	for (int i = 0; i < 16; i++) {
-		model2 = mat4(1.0f);
-		
+		model2 = mat4(1.0f);		
 		model2 = translate(model2, crossbows[i]->getPos());
 		model2 = rotate(model2, radians(90.0f * (crossbows[i]->getDir()+1)), vec3(0.0f, 1.0f, 0.0f));
 		model2 = glm::rotate(model2, glm::radians(crossbows[i]->getRotation()), vec3(1.0f, 0.0f, 0.0f));

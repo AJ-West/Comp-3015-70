@@ -139,5 +139,8 @@
     <ClInclude Include="helper\utils.h">
       <Filter>helper</Filter>
     </ClInclude>
+    <ClInclude Include="crossbow.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

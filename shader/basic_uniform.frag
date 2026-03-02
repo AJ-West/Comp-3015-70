@@ -128,51 +128,55 @@ void calcFog(in vec4 position){
     fogFactor = clamp(fogFactor,0.0,1.0); 
 }
 
-void pass1Bow(){
-    //Diffuse
-    vec4 position;
-    mat3 objectLocal;
-    calcNormalMapValues(position, objectLocal);
-
+vec3 bowNorm(){
     vec3 metalNorm = texture(metalNormal, TexCoord).xyz;
     vec3 rustNorm = texture(rustNormal, TexCoord).xyz;
     vec3 norm = vec3(metalNorm.xy + rustNorm.xy, metalNorm.z * rustNorm.z);
     //vec3 norm = texture(metalNormal, TexCoord).xyz;
     norm.xy = 2.0*norm.xy - 1.0;
+    return norm;
+}
 
-    calcFog(position);
-
-    for (int i=0; i<1; i++){
-        HDRColor += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
-    }
-
+vec3 bowTexture(){
     vec4 metalTextColour = texture(metalTex, TexCoord);
     vec4 rustTextColour = texture(rustTex, TexCoord);
 
-    vec3 textColour = mix(metalTextColour.rgb, rustTextColour.rgb, rustTextColour.a);
-    //vec3 textColour = texture(metalTex, TexCoord).rgb;
-
-    HDRColor *= textColour;
-    if(abs(position.z) > Fog.MinDist)
-    HDRColor = mix(Fog.Colour, HDRColor, fogFactor);
+    return mix(metalTextColour.rgb, rustTextColour.rgb, rustTextColour.a);
 }
 
-void pass1Arrow(){
-    //Diffuse
+vec3 arrowNorm(){
+    vec3 norm = texture(woodNormal, TexCoord).xyz;
+    norm.xy = 2.0*norm.xy - 1.0;
+    return norm;
+}
+
+vec3 arrowTexture(){
+    return texture(woodTex, TexCoord).rgb;
+}
+
+void pass1(){
     vec4 position;
     mat3 objectLocal;
     calcNormalMapValues(position, objectLocal);
 
-    vec3 norm = texture(woodNormal, TexCoord).xyz;
-    norm.xy = 2.0*norm.xy - 1.0;
+    vec3 norm;
+    vec3 texColor;
+    if(arrow){
+        norm = arrowNorm();
+        texColor = arrowTexture();
+    }
+    else{
+        norm = bowNorm();
+        texColor = bowTexture();
+    }
 
     calcFog(position);
 
-    for (int i=0; i<1; i++){
+    for (int i=0; i<3; i++){
         HDRColor += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
     }
 
-    HDRColor *= texture(woodTex, TexCoord).rgb;
+    HDRColor *= texColor;
     if(abs(position.z) > Fog.MinDist)
     HDRColor = mix(Fog.Colour, HDRColor, fogFactor);
 }
@@ -210,10 +214,8 @@ void pass2(){
 }
 
 void main() {
-    if(Pass == 1 && !arrow)
-    pass1Bow();
-    if(Pass == 1 && arrow)
-    pass1Arrow();
+    if(Pass == 1)
+    pass1();
     else if(Pass == 2)
     pass2();    
 }

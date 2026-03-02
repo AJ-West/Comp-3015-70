@@ -5,7 +5,7 @@
 
 using namespace glm;
 
-enum directions { up, left, down, right };
+enum directions { up, left, down, right, paused };
 
 enum {X, Y, Z};
 
@@ -14,7 +14,7 @@ public:
 	Camera(){}
 	~Camera(){}
 
-	void updatePosition(int direction) {
+	void updatePosition(int direction) { // moves the camera based off user input
 		switch (direction)
 		{
 		case up:
@@ -37,6 +37,7 @@ public:
 		}
 	}
 
+	//Ensures player stays within the play area with camera at correct heigh when not paused
 	void clamp(int dir, int low, int high) {
 		switch (dir) {
 		case X:
