@@ -69,13 +69,18 @@ struct Arrows {
 	}
 }allArrows[maxArrows];
 
-struct crossBow {
-	vec3 pos = vec3(0.0f, 0.0f, 0.0f);
+class crossBow {
+private:
+	vec3 pos;
 	vec3 rotation = vec3(0.0f, 90.0f, 0.0f);
 
-	int direction = 3;
+	int dir;
 
 	int delayCount = 0;
+
+public:
+	crossBow(vec3 position, int direction):pos(position), dir(direction) {
+	}
 
 	void updateRotation() {
 		rotation.y -= 1.0f;
@@ -88,13 +93,19 @@ struct crossBow {
 	}
 
 	void spawnArrow() {
+		
 		for (int i = 0; i < maxArrows; i++) {
 			if (!allArrows[i].inUse) {
-				allArrows[i].init(pos, direction);
+				allArrows[i].init(pos, dir);
+				break;
 			}
 		}
 	}
-} crossBowStruct;
+
+	vec3 getPos() { return pos; }
+	vec3 getRotation() { return rotation; }
+	int getDir() { return dir; }
+};
 
 SceneBasic_Uniform::SceneBasic_Uniform() : torus(0.7f, 0.3f, 30, 30), sky(100.0f) {
 	tPrev = 0;
@@ -167,6 +178,35 @@ void SceneBasic_Uniform::initScene()
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
 
 	prog.use();
+
+	int side = -1;
+	vec3 pos;
+	for (int i = 0; i < 16; i++) {
+		pos = vec3(0.0f, 0.0f, 0.0f);
+		if (i % 4 == 0) { side += 1; }
+		int dir = 0;
+		switch (side)
+		{
+		case 0:
+			pos = vec3(pos.x + 1.0f * i + 0.5f, pos.y, pos.z);
+			dir = 3;
+			break;
+		case 1:
+			pos = vec3(pos.x + 4.0f, pos.y, pos.z + 1.0f * (i - 3));
+			dir = 2;
+			break;
+		case 2:
+			pos = vec3(pos.x + 1.0f * (i - 8) + 0.5f, pos.y, pos.z + 5.0f);
+			dir = 1;
+			break;
+		case 3:
+			pos = vec3(pos.x, pos.y, pos.z + 1.0f * (i - 11));
+			dir = 0;
+			break;
+		
+		}
+		crossbows.emplace_back(new crossBow(pos, dir));
+	}
 }
 
 void SceneBasic_Uniform::setUpFullScreenQuad() {
@@ -260,7 +300,9 @@ void SceneBasic_Uniform::update( float t )
 			angle -= glm::two_pi<float>();
 		}
 
-		crossBowStruct.updateRotation();
+		for (int i = 0; i < 16; i++) {
+			crossbows[i]->updateRotation();
+		}
 
 		for (int i = 0; i < maxArrows; i++) {
 			if (allArrows[i].inUse) {
@@ -401,11 +443,10 @@ void SceneBasic_Uniform::drawScene() {
 	for (int i = 0; i < maxArrows; i++) {
 		if (allArrows[i].inUse) {
 			model1 = mat4(1.0f);
-
 			
 			model1 = translate(model1, allArrows[i].pos);
 			model1 = rotate(model1, radians(allArrows[i].rotation * allArrows[i].direction), vec3(0.0f, 1.0f, 0.0f));
-			model1 = scale(model1, vec3(0.025f, 0.025f, 0.025f));
+			model1 = scale(model1, vec3(0.05f, 0.05f, 0.05f));
 			setMatrices(model1, &prog);
 			prog.setUniform("Model", model1);
 			
@@ -420,13 +461,16 @@ void SceneBasic_Uniform::drawScene() {
 	//torus.render();
 
 
-	model2 = mat4(1.0f);
-
-	model2 = glm::rotate(model2, glm::radians(crossBowStruct.rotation.y), vec3(1.0f, 0.0f, 0.0f));
-	model2 = translate(model2, crossBowStruct.pos);
-	model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
-	setMatrices(model2, &prog);
-	prog.setUniform("Model", model2);
 	prog.setUniform("arrow", false);
-	crossbow->render();
+	for (int i = 0; i < 16; i++) {
+		model2 = mat4(1.0f);
+		
+		model2 = translate(model2, crossbows[i]->getPos());
+		model2 = rotate(model2, radians(90.0f * (crossbows[i]->getDir()+1)), vec3(0.0f, 1.0f, 0.0f));
+		model2 = glm::rotate(model2, glm::radians(crossbows[i]->getRotation().y), vec3(1.0f, 0.0f, 0.0f));
+		model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
+		setMatrices(model2, &prog);
+		prog.setUniform("Model", model2);		
+		crossbow->render();
+	}	
 }

@@ -15,6 +15,8 @@
 
 #include "helper/objmesh.h"
 
+class crossBow;
+
 class SceneBasic_Uniform : public Scene
 {
 private:
@@ -31,6 +33,8 @@ private:
     std::unique_ptr<ObjMesh> arrow;
 
     SkyBox sky;
+
+    std::vector<crossBow*> crossbows;
 
     float tPrev;
     float angle;
