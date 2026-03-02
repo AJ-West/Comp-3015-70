@@ -1,5 +1,7 @@
 # Arrow dodge game for showing off lighting and texturing techniques
 
+To compile the project it should just compile assuming you have opengl and Gld.c set up as suggested in the brief. However in testing sometimes I had to add glad.c again even though the file path hadn't changed but I am not sure why. If there is an issue with glad.c remove the current one from the project then add it back to the same place and it should work. I have this issue when first using the project template before changing anything and this was my fix.
+
 ## Project info
 
 ### Github:
