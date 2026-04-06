@@ -23,6 +23,8 @@ private:
     GLSLProgram prog;
 
     GLuint cubeTex; // skybox texture
+    GLuint cloudQuad; // Quad to display clouds on
+    GLuint noiseTex; // noise texture for clouds
 
     GLuint hdrFBO;
     GLuint quad;
@@ -50,6 +52,7 @@ private:
     void pass2();
     void computeLogAveLuminance();
     void drawScene();
+    void createCloudQuad();
 
 public:
     SceneBasic_Uniform();

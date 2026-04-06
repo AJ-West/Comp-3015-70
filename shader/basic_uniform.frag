@@ -1,5 +1,7 @@
 #version 460
 
+#define PI 3.14159265
+
 //current position from last stage
 in vec3 crntPosFrag;
 //current normal from last stage
@@ -161,6 +163,30 @@ vec3 arrowTexture(){
     return texture(woodTex, TexCoord).rgb;
 }
 
+uniform sampler2D NoiseTex;
+
+uniform vec4 skyColor = vec4(0.2, 0.2, 0.9, 0.0);
+uniform vec4 CloudColor = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec2 offset;
+
+uniform bool isClouds = false;
+
+void clouds(){
+    // transform texture coords to define the offset
+    vec2 tc = TexCoord + offset;
+
+    vec4 noise = texture(NoiseTex, tc);
+
+    float t = (cos(noise.a * PI) + 1.0)/2.0;
+
+    //vec4 skyColor = texture(SkyBoxTex, normalize(crntPosFrag));
+
+    //vec4 color = mix(skyColor+ vec4(texture(SkyBoxTex, normalize(crntPosFrag)).rgb, 1.0), CloudColor, t);
+    vec4 color = mix(texture(SkyBoxTex, normalize(crntPosFrag)), CloudColor, t);
+
+    HDRColor = color.rgb;
+}
+
 void pass1(){
     vec4 position;
     mat3 objectLocal;
@@ -228,6 +254,8 @@ void main() {
     if(Pass == 1){
         if(isSkybox) // if skybox
             skybox();
+        else if(isClouds)
+            clouds();
         else
             pass1();
     }

@@ -18,6 +18,7 @@ using std::endl;
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "media/texture/texture.h"
+#include "helper/noisetex.h"
 
 #include "global.h"
 #include "crossbow.h"
@@ -133,6 +134,8 @@ void SceneBasic_Uniform::initScene()
 		}
 		crossbows.emplace_back(new crossBow(pos, dir));
 	}
+
+	createCloudQuad();
 }
 
 void SceneBasic_Uniform::setUpFullScreenQuad() {
@@ -247,6 +250,13 @@ void SceneBasic_Uniform::update( float t )
 			}
 		}
 	}
+
+	//updates clouds
+	glm::vec2 offset = glm::vec2(0.0f);
+	offset.x += t / 100;
+	offset.y += t / 200;
+
+	prog.setUniform("offset", offset);
 }
 
 void SceneBasic_Uniform::updateCamera(int direction) {
@@ -362,6 +372,22 @@ void SceneBasic_Uniform::drawScene() {
 
 	prog.setUniform("isSkybox", false);
 
+	prog.setUniform("isClouds", true);
+	cloudModel = mat4(1.0f);
+	cloudModel = translate(cloudModel, vec3(0.0f, 15.0f, 0.0f));
+	cloudModel = rotate(cloudModel, radians(90.0f), vec3(1.0f, 0.0f, 0.0f));
+	cloudModel = scale(cloudModel, vec3(20.0f, 20.0f, 20.0f));
+
+	setMatrices(cloudModel, &prog);
+	prog.setUniform("Model", cloudModel);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, noiseTex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glBindVertexArray(cloudQuad);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	prog.setUniform("isClouds", false);
+
 	//updates position of the moving lights
 	float x, z;
 	for (int i = 1; i < 3; i++) {
@@ -402,4 +428,51 @@ void SceneBasic_Uniform::drawScene() {
 		crossbow->render();
 	}
 	model2 = mat4(1.0f);
+}
+
+void SceneBasic_Uniform::createCloudQuad() {
+	/////////////////// Create the VBO ////////////////////
+	float verts[] = {
+		-1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+		-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f, -1.0f, 1.0f, 0.0f
+	};
+	float tc[] = {
+		0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f };
+
+	// Create and populate the buffer objects
+	unsigned int handle[2];
+	glGenBuffers(2, handle);
+
+	glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
+	glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(float), verts, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
+	glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), tc, GL_STATIC_DRAW);
+
+	// Create and set-up the vertex array object
+	glGenVertexArrays(1, &cloudQuad);
+	glBindVertexArray(cloudQuad);
+
+	//Set up the vertex array object
+	glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
+	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, ((GLubyte*)NULL + (0)));
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
+	glVertexAttribPointer((GLuint)2, 2, GL_FLOAT, GL_FALSE, 0, ((GLubyte*)NULL + (0)));
+	glEnableVertexAttribArray(2);
+
+	glBindVertexArray(0);
+
+	prog.setUniform("NoiseTex", 0);
+
+	noiseTex = NoiseTex::generate2DTex(5.0f);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, noiseTex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+
+	glm::vec2 offset = glm::vec2(1.0f);
+	prog.setUniform("offset", offset);
 }

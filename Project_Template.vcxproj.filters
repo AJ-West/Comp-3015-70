@@ -69,6 +69,9 @@
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="helper\noisetex.cpp">
+      <Filter>helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\basic_uniform.frag">
@@ -135,6 +138,9 @@
     </ClInclude>
     <ClInclude Include="crossbow.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\noisetex.h">
+      <Filter>helper</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
