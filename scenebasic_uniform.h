@@ -21,7 +21,8 @@ class SceneBasic_Uniform : public Scene
 {
 private:
     GLSLProgram prog;
-    GLSLProgram skyProg;
+
+    GLuint cubeTex; // skybox texture
 
     GLuint hdrFBO;
     GLuint quad;

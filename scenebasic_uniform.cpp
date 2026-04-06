@@ -96,14 +96,12 @@ void SceneBasic_Uniform::initScene()
 	crossbow = ObjMesh::load("media/models/crossbow.obj", false, true);
 
 	//sets up skybox
-	skyProg.use();
-
 	skyModel = mat4(1.0f);
 
 	//loads cubemap texture
-	GLuint cubeTex = Texture::loadHdrCubeMap("media/texture/mountainsCubeMap/skybox");
+	cubeTex = Texture::loadHdrCubeMap("media/texture/mountainsCubeMap/skybox");
 
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE7);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
 
 	// Spawns the crossbows along each side in the required positions with the correct direction to face
@@ -205,10 +203,7 @@ void SceneBasic_Uniform::compile()
 	try {
 		prog.compileShader("shader/basic_uniform.vert");
 		prog.compileShader("shader/basic_uniform.frag");
-		skyProg.compileShader("shader/skybox.vert");
-		skyProg.compileShader("shader/skybox.frag");
 		prog.link();
-		skyProg.link();
 		prog.use();
 	} catch (GLSLProgramException &e) {
 		cerr << e.what() << endl;
@@ -358,12 +353,14 @@ void SceneBasic_Uniform::computeLogAveLuminance() {
 
 void SceneBasic_Uniform::drawScene() {
 	//draws skybox
-	skyProg.use();
+	prog.setUniform("isSkybox", true);
 	skyModel = mat4(1.0f);
-	skyProg.setUniform("MVP", projection * view * skyModel);
+	setMatrices(skyModel, &prog);
+	prog.setUniform("MVP", projection * view * skyModel);
+	prog.setUniform("Model", skyModel);
 	sky.render();
 
-	prog.use();
+	prog.setUniform("isSkybox", false);
 
 	//updates position of the moving lights
 	float x, z;
@@ -390,6 +387,7 @@ void SceneBasic_Uniform::drawScene() {
 			arrow->render();
 		}
 	}
+	model1 = mat4(1.0f);
 
 	prog.setUniform("arrow", false);
 	//render each crossbow
@@ -402,5 +400,6 @@ void SceneBasic_Uniform::drawScene() {
 		setMatrices(model2, &prog);
 		prog.setUniform("Model", model2);		
 		crossbow->render();
-	}	
+	}
+	model2 = mat4(1.0f);
 }

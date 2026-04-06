@@ -9,6 +9,13 @@ in vec2 TexCoord;
 // tangents from last stage
 in vec4 vertTangent;
 
+// for sky box
+
+layout(binding=7) uniform samplerCube SkyBoxTex; // want to sort texture binding values
+uniform bool isSkybox;
+
+// end sky box
+
 layout(binding=0) uniform sampler2D HDRTex;
 layout(binding=1) uniform sampler2D metalTex;
 layout(binding=2) uniform sampler2D metalNormal;
@@ -213,9 +220,17 @@ void pass2(){
     FragColor = vec4(Colour, 1.0);    
 }
 
+void skybox(){
+    HDRColor = texture(SkyBoxTex, normalize(crntPosFrag)).rgb;
+}
+
 void main() {
-    if(Pass == 1)
-    pass1();
+    if(Pass == 1){
+        if(isSkybox) // if skybox
+            skybox();
+        else
+            pass1();
+    }
     else if(Pass == 2)
     pass2();    
 }
