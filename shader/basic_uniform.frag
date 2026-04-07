@@ -169,7 +169,25 @@ void clouds(){
 
     float t = (cos(noise.a * PI) + 1.0)/2.0;
 
-    vec4 color = mix(texture(SkyBoxTex, normalize(crntPosFrag)), CloudColor, t);
+    vec4 skyTex = texture(SkyBoxTex, normalize(crntPosFrag));
+
+    vec4 position = ModelViewMatrix * vec4(crntPosFrag, 1.0);
+
+    float z = camPos.z-crntPosFrag.z;
+    float x = camPos.x-crntPosFrag.x;
+
+    float dist = abs(sqrt(z*z + x*x));
+
+    fogFactor = (Fog.MaxDist - dist)/(Fog.MaxDist - Fog.MinDist);
+
+    fogFactor = clamp(fogFactor,0.0,1.0); 
+
+    vec4 cloudTex = CloudColor;
+
+    t -= dist/25;
+    t = clamp(t, 0.0, 1.0);
+
+    vec4 color = mix(skyTex, cloudTex, t);
 
     HDRColor = color.rgb;
 }
