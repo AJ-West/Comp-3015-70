@@ -67,30 +67,24 @@ void SceneBasic_Uniform::initScene()
 	setProgDefaults(&prog);
 
 	//loads all textures that will be required
-	GLuint metalTex = Texture::loadTexture("media/texture/metal/metal.png");
-	GLuint metalNormal = Texture::loadTexture("media/texture/metal/metal_normalMap.png");
-	GLuint rustTex = Texture::loadTexture("media/texture/rust/rust.png");
-	GLuint rustNormal = Texture::loadTexture("media/texture/rust/rust_normalMap.png");
-	GLuint woodTex = Texture::loadTexture("media/texture/wood/wood.png");
-	GLuint woodNormal = Texture::loadTexture("media/texture/wood/wood_normalMap.png");
-
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, metalTex);
+	metalTex = Texture::loadTexture("media/texture/metal/metal.png");
+	metalNormal = Texture::loadTexture("media/texture/metal/metal_normalMap.png");
+	rustTex = Texture::loadTexture("media/texture/rust/rust.png");
+	rustNormal = Texture::loadTexture("media/texture/rust/rust_normalMap.png");
+	woodTex = Texture::loadTexture("media/texture/wood/wood.png");
+	woodNormal = Texture::loadTexture("media/texture/wood/wood_normalMap.png");
 
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, metalNormal);
+	glBindTexture(GL_TEXTURE_2D, metalTex);
 
 	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, rustTex);
+	glBindTexture(GL_TEXTURE_2D, metalNormal);
 
 	glActiveTexture(GL_TEXTURE4);
-	glBindTexture(GL_TEXTURE_2D, rustNormal);
+	glBindTexture(GL_TEXTURE_2D, rustTex);
 
 	glActiveTexture(GL_TEXTURE5);
-	glBindTexture(GL_TEXTURE_2D, woodTex);
-
-	glActiveTexture(GL_TEXTURE6);
-	glBindTexture(GL_TEXTURE_2D, woodNormal);
+	glBindTexture(GL_TEXTURE_2D, rustNormal);
 
 	// loads required models
 	arrow = ObjMesh::load("media/models/arrow.obj", false, true);
@@ -102,7 +96,7 @@ void SceneBasic_Uniform::initScene()
 	//loads cubemap texture
 	cubeTex = Texture::loadHdrCubeMap("media/texture/mountainsCubeMap/skybox");
 
-	glActiveTexture(GL_TEXTURE7);
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
 
 	// Spawns the crossbows along each side in the required positions with the correct direction to face
@@ -398,8 +392,13 @@ void SceneBasic_Uniform::drawScene() {
 		prog.setUniform(name.str().c_str(), view * glm::vec4(x * cos(angle), 1.2f, (z + 1.0f) * sin(angle), 1.0f));
 	}
 
-	//sets to true to know which textures to render
-	prog.setUniform("arrow", true);
+
+	prog.setUniform("numOfTex", 1);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, woodTex);
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, woodNormal);
 	//render each arrow
 	for (int i = 0; i < maxArrows; i++) {
 		if (allArrows[i].inUse) {
@@ -415,7 +414,19 @@ void SceneBasic_Uniform::drawScene() {
 	}
 	model1 = mat4(1.0f);
 
-	prog.setUniform("arrow", false);
+
+	prog.setUniform("numOfTex", 2);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, metalTex);
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, metalNormal);
+
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, rustTex);
+
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, rustNormal);
 	//render each crossbow
 	for (int i = 0; i < 16; i++) {
 		model2 = mat4(1.0f);		

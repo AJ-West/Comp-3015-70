@@ -11,20 +11,15 @@ in vec2 TexCoord;
 // tangents from last stage
 in vec4 vertTangent;
 
-// for sky box
-
-layout(binding=7) uniform samplerCube SkyBoxTex; // want to sort texture binding values
 uniform bool isSkybox;
-
-// end sky box
+uniform int numOfTex;
 
 layout(binding=0) uniform sampler2D HDRTex;
-layout(binding=1) uniform sampler2D metalTex;
-layout(binding=2) uniform sampler2D metalNormal;
-layout(binding=3) uniform sampler2D rustTex;
-layout(binding=4) uniform sampler2D rustNormal;
-layout(binding=5) uniform sampler2D woodTex;
-layout(binding=6) uniform sampler2D woodNormal;
+layout(binding=1) uniform samplerCube SkyBoxTex; // want to sort texture binding values
+layout(binding=2) uniform sampler2D Tex1;
+layout(binding=3) uniform sampler2D Norm1;
+layout(binding=4) uniform sampler2D Tex2;
+layout(binding=5) uniform sampler2D Norm2;
 
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec3 HDRColor;
@@ -81,8 +76,6 @@ uniform vec3 camPos;
 const int levels = 10;
 const float scaleFactor = 1.0/levels;
 
-uniform bool arrow = false;
-
 //get position and normal to camera space
 void getCamSpaceValues(out vec3 normal, out vec4 position){
     normal = normalize(NormalMatrix * crntNormFrag);
@@ -137,30 +130,27 @@ void calcFog(in vec4 position){
     fogFactor = clamp(fogFactor,0.0,1.0); 
 }
 
-vec3 bowNorm(){
-    vec3 metalNorm = texture(metalNormal, TexCoord).xyz;
-    vec3 rustNorm = texture(rustNormal, TexCoord).xyz;
-    vec3 norm = vec3(metalNorm.xy + rustNorm.xy, metalNorm.z * rustNorm.z);
-    //vec3 norm = texture(metalNormal, TexCoord).xyz;
+vec3 mixNorm(){
+    vec3 norm = texture(Tex1, TexCoord).xyz;
+
+    if(numOfTex == 2){
+        vec3 tex2Norm = texture(Norm2, TexCoord).xyz;
+        vec3 norm = vec3(norm.xy + tex2Norm.xy, norm.z * tex2Norm.z);
+    }
+
     norm.xy = 2.0*norm.xy - 1.0;
     return norm;
 }
 
-vec3 bowTexture(){
-    vec4 metalTextColour = texture(metalTex, TexCoord);
-    vec4 rustTextColour = texture(rustTex, TexCoord);
+vec3 mixTexture(){
+    vec4 texColour = texture(Tex1, TexCoord);
 
-    return mix(metalTextColour.rgb, rustTextColour.rgb, rustTextColour.a);
-}
+    if(numOfTex == 2){
+        vec4 Tex2Colour = texture(Tex2, TexCoord);
+        return mix(texColour.rgb, Tex2Colour.rgb, Tex2Colour.a);
+    }
+    return texColour.rgb;
 
-vec3 arrowNorm(){
-    vec3 norm = texture(woodNormal, TexCoord).xyz;
-    norm.xy = 2.0*norm.xy - 1.0;
-    return norm;
-}
-
-vec3 arrowTexture(){
-    return texture(woodTex, TexCoord).rgb;
 }
 
 uniform sampler2D NoiseTex;
@@ -179,9 +169,6 @@ void clouds(){
 
     float t = (cos(noise.a * PI) + 1.0)/2.0;
 
-    //vec4 skyColor = texture(SkyBoxTex, normalize(crntPosFrag));
-
-    //vec4 color = mix(skyColor+ vec4(texture(SkyBoxTex, normalize(crntPosFrag)).rgb, 1.0), CloudColor, t);
     vec4 color = mix(texture(SkyBoxTex, normalize(crntPosFrag)), CloudColor, t);
 
     HDRColor = color.rgb;
@@ -194,14 +181,8 @@ void pass1(){
 
     vec3 norm;
     vec3 texColor;
-    if(arrow){
-        norm = arrowNorm();
-        texColor = arrowTexture();
-    }
-    else{
-        norm = bowNorm();
-        texColor = bowTexture();
-    }
+    norm = mixNorm();
+    texColor = mixTexture();    
 
     calcFog(position);
 
