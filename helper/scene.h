@@ -5,7 +5,7 @@
 class Scene
 {
 protected:
-	glm::mat4 skyModel, cloudModel, model1, model2, view, projection;
+	glm::mat4 skyModel, cloudModel, model, model1, model2, view, projection;
 
 public:
     int width;

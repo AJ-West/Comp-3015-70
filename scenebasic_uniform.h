@@ -20,7 +20,7 @@ class crossBow;
 class SceneBasic_Uniform : public Scene
 {
 private:
-    GLSLProgram prog;
+    GLSLProgram prog, pProg;
 
     GLuint cubeTex; // skybox texture
     GLuint cloudQuad; // Quad to display clouds on
@@ -40,6 +40,23 @@ private:
 
     std::vector<crossBow*> crossbows;
 
+    // position and direction of particle emitter
+    glm::vec3 emitterPos, emitterDir;
+
+    //particle buffers
+    GLuint posBuf[2], velBuf[2], age[2];
+
+    //particle VAOs
+    GLuint particleArray[2];
+
+    // Transform feedbacks
+    GLuint feedback[2];
+
+    GLuint drawBuf;
+
+    int nParticles;
+    float cTime, particleLifetime, deltaT;
+
     float tPrev;
     float angle;
 
@@ -56,6 +73,9 @@ private:
     void computeLogAveLuminance();
     void drawScene();
     void createCloudQuad();
+
+    void initBuffers();
+    void renderParticles();
 
 public:
     SceneBasic_Uniform();

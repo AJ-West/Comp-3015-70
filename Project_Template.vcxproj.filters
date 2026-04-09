@@ -80,6 +80,12 @@
     <None Include="shader\basic_uniform.vert">
       <Filter>shaders</Filter>
     </None>
+    <None Include="shader\particles.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shader\particles.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper\scene.h">
@@ -140,6 +146,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="helper\noisetex.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\particleutils.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\random.h">
       <Filter>helper</Filter>
     </ClInclude>
   </ItemGroup>

@@ -17,7 +17,6 @@ using std::endl;
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "media/texture/texture.h"
 #include "helper/noisetex.h"
 
 #include "global.h"
@@ -27,7 +26,8 @@ using glm::vec3;
 
 using glm::mat4;
 
-SceneBasic_Uniform::SceneBasic_Uniform() : sky(100.0f) {
+SceneBasic_Uniform::SceneBasic_Uniform() : sky(100.0f), angle(0.0f), drawBuf(1), cTime(0), deltaT(0), nParticles(400),
+particleLifetime(5.5f), emitterPos(1, 0, 0), emitterDir(0, 2, 0) {
 	tPrev = 0;
 	angle = 0;
 }
@@ -37,7 +37,10 @@ void SceneBasic_Uniform::initScene()
 	std::srand(time(0));
 
     compile();
-	glEnable(GL_DEPTH_TEST);
+	// Enable alpha blending
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glEnable(GL_DEPTH_TEST);
 
 	//sets up models for default arrow
 	model1 = mat4(1.0f);
@@ -127,9 +130,112 @@ void SceneBasic_Uniform::initScene()
 		
 		}
 		crossbows.emplace_back(new crossBow(pos, dir));
+		//crossbows[i]->initBuffers(&pProg);
 	}
-
+	prog.use();
 	createCloudQuad();
+
+	model = mat4(1.0f);
+
+	glActiveTexture(GL_TEXTURE0);
+	Texture::loadTexture("helper/smoke.png");
+
+	glActiveTexture(GL_TEXTURE1);
+	ParticleUtils::createRandomTex1D(nParticles * 3);
+
+	initBuffers();
+
+	pProg.use();
+	pProg.setUniform("RandomTex", 1);
+	pProg.setUniform("ParticleTex", 0);
+	pProg.setUniform("ParticleLifetime", particleLifetime);
+	pProg.setUniform("Accel", vec3(0.0f, 0.0f, 0.0f));
+	pProg.setUniform("ParticleSize", 0.5f);
+	pProg.setUniform("Emitter", emitterPos);
+	pProg.setUniform("EmitterBasis", ParticleUtils::makeArbitraryBasis(emitterDir));
+}
+
+void SceneBasic_Uniform::initBuffers() {
+	// Generate the buffer for initial velocity and start (birth) time
+	glGenBuffers(2, posBuf); // position buffers
+	glGenBuffers(2, velBuf); // velocity buffers
+	glGenBuffers(2, age); // age buffers
+
+	//Allocate space for all buffers
+	int size = nParticles * 3 * sizeof(GLfloat);
+	glBindBuffer(GL_ARRAY_BUFFER, posBuf[0]);
+	glBufferData(GL_ARRAY_BUFFER, size, 0, GL_DYNAMIC_COPY);
+	glBindBuffer(GL_ARRAY_BUFFER, posBuf[1]);
+	glBufferData(GL_ARRAY_BUFFER, size, 0, GL_DYNAMIC_COPY);
+	glBindBuffer(GL_ARRAY_BUFFER, velBuf[0]);
+	glBufferData(GL_ARRAY_BUFFER, size, 0, GL_DYNAMIC_COPY);
+	glBindBuffer(GL_ARRAY_BUFFER, velBuf[1]);
+	glBufferData(GL_ARRAY_BUFFER, size, 0, GL_DYNAMIC_COPY);
+	glBindBuffer(GL_ARRAY_BUFFER, age[0]);
+	glBufferData(GL_ARRAY_BUFFER, nParticles * sizeof(float), 0, GL_DYNAMIC_COPY);
+	glBindBuffer(GL_ARRAY_BUFFER, age[1]);
+	glBufferData(GL_ARRAY_BUFFER, nParticles * sizeof(float), 0, GL_DYNAMIC_COPY);
+
+	// Fill the first age buffer
+	std::vector<GLfloat> tempData(nParticles);
+	float rate = particleLifetime / nParticles;
+	for (int i = 0; i < nParticles; i++) {
+		tempData[i] = rate * (i - nParticles);
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, age[0]);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, nParticles * sizeof(float), tempData.data());
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// create vertex arrays for each set of buffers
+	glGenVertexArrays(2, particleArray);
+
+	// set up particle array 0
+	glBindVertexArray(particleArray[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, posBuf[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, velBuf[0]);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, age[0]);
+	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(2);
+
+	// set up particle array 1
+	glBindVertexArray(particleArray[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, posBuf[1]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, velBuf[1]);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, age[1]);
+	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(2);
+
+	glBindVertexArray(0);
+
+	// Set up the feedback objects
+	glGenTransformFeedbacks(2, feedback);
+
+	// Transform feedback 0
+	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[0]);
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, posBuf[0]);
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 1, velBuf[0]);
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 2, age[0]);
+
+	// Transform feedback 1
+	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[1]);
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, posBuf[1]);
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 1, velBuf[1]);
+	glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 2, age[1]);
+
+	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
 }
 
 void SceneBasic_Uniform::setUpFullScreenQuad() {
@@ -202,6 +308,16 @@ void SceneBasic_Uniform::compile()
 		prog.compileShader("shader/basic_uniform.frag");
 		prog.link();
 		prog.use();
+
+		pProg.compileShader("shader/particles.vert");
+		pProg.compileShader("shader/particles.frag");
+
+		// setup transform feedback
+		GLuint progHandle = pProg.getHandle();
+		const char* outputNames[] = { "Position", "Velocity", "Age" };
+		glTransformFeedbackVaryings(progHandle, 3, outputNames, GL_SEPARATE_ATTRIBS);
+
+		pProg.link();
 	} catch (GLSLProgramException &e) {
 		cerr << e.what() << endl;
 		exit(EXIT_FAILURE);
@@ -223,10 +339,12 @@ void SceneBasic_Uniform::update( float t )
 			angle -= glm::two_pi<float>();
 		}
 
-		//update all crossbow's rotation
+		//update all crossbow's time and rotation
+		pProg.use();
 		for (int i = 0; i < 16; i++) {
-			crossbows[i]->updateRotation();
+			crossbows[i]->update(t);
 		}
+		prog.use();
 
 		// updates position for all arrows and checks if they hit the player
 		for (int i = 0; i < maxArrows; i++) {
@@ -244,6 +362,9 @@ void SceneBasic_Uniform::update( float t )
 			}
 		}
 	}
+
+	deltaT = t - cTime;
+	cTime = t;
 
 	//updates clouds
 	glm::vec2 offset = glm::vec2(0.0f);
@@ -356,6 +477,7 @@ void SceneBasic_Uniform::computeLogAveLuminance() {
 }
 
 void SceneBasic_Uniform::drawScene() {
+	prog.use();
 	//draws skybox
 	prog.setUniform("isSkybox", true);
 	skyModel = mat4(1.0f);
@@ -429,6 +551,7 @@ void SceneBasic_Uniform::drawScene() {
 	glBindTexture(GL_TEXTURE_2D, rustNormal);
 	//render each crossbow
 	for (int i = 0; i < 16; i++) {
+		prog.use();
 		model2 = mat4(1.0f);		
 		model2 = translate(model2, crossbows[i]->getPos());
 		model2 = rotate(model2, radians(90.0f * (crossbows[i]->getDir()+1)), vec3(0.0f, 1.0f, 0.0f));
@@ -437,8 +560,68 @@ void SceneBasic_Uniform::drawScene() {
 		setMatrices(model2, &prog);
 		prog.setUniform("Model", model2);		
 		crossbow->render();
+
+		// need to set matrices for particle prog before pass 2
+		//pProg.use();
+		//setMatrices(model2, &pProg);
+		//crossbows[i]->renderParticles(&pProg);
 	}
+	prog.use();
 	model2 = mat4(1.0f);
+
+	renderParticles();
+}
+
+void SceneBasic_Uniform::renderParticles() {
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	pProg.use();
+
+	glActiveTexture(GL_TEXTURE0);
+	Texture::loadTexture("helper/smoke.png");
+
+	glActiveTexture(GL_TEXTURE1);
+	ParticleUtils::createRandomTex1D(nParticles * 3);
+
+	pProg.setUniform("Time", cTime);
+	pProg.setUniform("DeltaT", deltaT);
+
+	// update pass
+	pProg.setUniform("Pass", 1);
+
+	glEnable(GL_RASTERIZER_DISCARD);
+	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[drawBuf]);
+	glBeginTransformFeedback(GL_POINTS);
+
+	glBindVertexArray(particleArray[1 - drawBuf]);
+	glVertexAttribDivisor(0, 0);
+	glVertexAttribDivisor(1, 0);
+	glVertexAttribDivisor(2, 0);
+	glDrawArrays(GL_POINTS, 0, nParticles);
+	glBindVertexArray(0);
+
+	glEndTransformFeedback();
+	glDisable(GL_RASTERIZER_DISCARD);
+
+	// render pass
+	pProg.setUniform("Pass", 2);
+
+	view = glm::lookAt(vec3(4.0f * cos(angle), 1.5f, 4.0f * sin(angle)),
+		vec3(0.0f, 1.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+	setMatrices(model, &pProg);
+
+	glDepthMask(GL_FALSE);
+	glBindVertexArray(particleArray[drawBuf]);
+	glVertexAttribDivisor(0, 1);
+	glVertexAttribDivisor(1, 1);
+	glVertexAttribDivisor(2, 1);
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, nParticles);
+	glBindVertexArray(0);
+	glDepthMask(GL_TRUE);
+
+	//swap buffers
+	drawBuf = 1 - drawBuf;
+	prog.use();
 }
 
 void SceneBasic_Uniform::createCloudQuad() {
