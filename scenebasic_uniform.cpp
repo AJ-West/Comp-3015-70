@@ -41,8 +41,8 @@ void SceneBasic_Uniform::initScene()
 	//glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
 	// Enable alpha blending
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
 
 	//sets up models for default arrow
@@ -625,6 +625,9 @@ void SceneBasic_Uniform::renderParticles() {
 
 	pProg.setUniform("Time", cTime);
 	pProg.setUniform("DeltaT", deltaT);
+
+	model = mat4(1.0f);
+	model = translate(model, vec3(1.0f, 1.0f, 5.0f));
 
 	glm::mat4 mv = view * model; // modle view matrix
 	pProg.setUniform("MV", mv);

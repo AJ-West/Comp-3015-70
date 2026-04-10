@@ -22,7 +22,7 @@ layout(binding=4) uniform sampler2D Tex2;
 layout(binding=5) uniform sampler2D Norm2;
 
 layout (location = 0) out vec4 FragColor;
-layout (location = 1) out vec3 HDRColor;
+layout (location = 1) out vec4 HDRColor;
 
 //for HDR
 uniform int Pass; // Pass number
@@ -189,7 +189,7 @@ void clouds(){
 
     vec4 color = mix(skyTex, cloudTex, t);
 
-    HDRColor = color.rgb;
+    HDRColor = color;
 }
 
 void pass1(){
@@ -205,12 +205,13 @@ void pass1(){
     calcFog(position);
 
     for (int i=0; i<3; i++){
-        HDRColor += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
+        HDRColor.rgb += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
     }
 
-    HDRColor *= texColor;
+    HDRColor.rgb *= texColor;
     if(abs(position.z) > Fog.MinDist)
-    HDRColor = mix(Fog.Colour, HDRColor, fogFactor);
+    HDRColor.rgb = mix(Fog.Colour, HDRColor.rgb, fogFactor);
+    HDRColor.a = 1.0;
 }
 
 void pass2(){
@@ -246,7 +247,7 @@ void pass2(){
 }
 
 void skybox(){
-    HDRColor = texture(SkyBoxTex, normalize(crntPosFrag)).rgb;
+    HDRColor = texture(SkyBoxTex, normalize(crntPosFrag));
 }
 
 void main() {

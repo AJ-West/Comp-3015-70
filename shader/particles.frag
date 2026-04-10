@@ -10,7 +10,7 @@ layout(binding=0) uniform sampler2D HDRTex;
 uniform int Pass;
 
 layout (location = 0) out vec4 FragColor;
-layout (location = 1) out vec3 HDRColor;
+layout (location = 1) out vec4 HDRColor;
 
 //for HDR
 uniform float AveLum;
@@ -63,14 +63,12 @@ void pass2(){
         //Colour.y = floor(Colour.y * levels)*scaleFactor;
         //Colour.z = floor(Colour.z * levels)*scaleFactor;
     }
-    FragColor = vec4(Colour, 1.0);
-    FragColor = vec4(mix(vec3(0,0,0), FragColor.xyz, Transp), FragColor.a);
-    FragColor.a *= Transp;
+    FragColor = vec4(Colour, Transp);
 }
 
 void main() {
     if(Pass == 1)
-        HDRColor = texture(ParticleTex, TexCoord).rgb;
+        HDRColor = texture(ParticleTex, TexCoord);
     else
         pass2();
     
