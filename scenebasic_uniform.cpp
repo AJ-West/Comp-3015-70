@@ -26,7 +26,7 @@ using glm::vec3;
 
 using glm::mat4;
 
-SceneBasic_Uniform::SceneBasic_Uniform() : sky(100.0f), angle(0.0f), drawBuf(1), cTime(0), deltaT(0), nParticles(400),
+SceneBasic_Uniform::SceneBasic_Uniform() : sky(100.0f), angle(0.0f), drawBuf(1), cTime(0), deltaT(0), nParticles(4000),
 particleLifetime(5.5f), emitterPos(1, 0, 0), emitterDir(0, 2, 0) {
 	tPrev = 0;
 	angle = 0;
@@ -37,10 +37,13 @@ void SceneBasic_Uniform::initScene()
 	std::srand(time(0));
 
     compile();
+
+	//glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
 	// Enable alpha blending
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 
 	//sets up models for default arrow
 	model1 = mat4(1.0f);
@@ -132,20 +135,24 @@ void SceneBasic_Uniform::initScene()
 		crossbows.emplace_back(new crossBow(pos, dir));
 		//crossbows[i]->initBuffers(&pProg);
 	}
-	prog.use();
+	
 	createCloudQuad();
 
-	model = mat4(1.0f);
+	pProg.use();
+
+	model = mat4(5.0f);
+
+	smoke = Texture::loadTexture("media/texture/smoke.png");
+	particleTex = ParticleUtils::createRandomTex1D(nParticles * 3);
 
 	glActiveTexture(GL_TEXTURE0);
-	Texture::loadTexture("helper/smoke.png");
+	glBindTexture(GL_TEXTURE_2D, smoke);
 
 	glActiveTexture(GL_TEXTURE1);
-	ParticleUtils::createRandomTex1D(nParticles * 3);
+	glBindTexture(GL_TEXTURE_1D, particleTex);
 
 	initBuffers();
-
-	pProg.use();
+	
 	pProg.setUniform("RandomTex", 1);
 	pProg.setUniform("ParticleTex", 0);
 	pProg.setUniform("ParticleLifetime", particleLifetime);
@@ -153,6 +160,8 @@ void SceneBasic_Uniform::initScene()
 	pProg.setUniform("ParticleSize", 0.5f);
 	pProg.setUniform("Emitter", emitterPos);
 	pProg.setUniform("EmitterBasis", ParticleUtils::makeArbitraryBasis(emitterDir));
+
+	prog.use();
 }
 
 void SceneBasic_Uniform::initBuffers() {
@@ -459,6 +468,38 @@ void SceneBasic_Uniform::pass2() {
 	//Render the quad
 	glBindVertexArray(quad);
 	glDrawArrays(GL_TRIANGLES, 0,6);
+
+	pProg.use();
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, smoke);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_1D, particleTex);
+
+	pProg.setUniform("Pass", 2);
+
+	view = glm::lookAt(vec3(4.0f * cos(angle), 1.5f, 4.0f * sin(angle)),
+		vec3(0.0f, 1.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+	projection = mat4(1.0f);
+	setMatrices(model, &pProg);
+	glm::mat4 mv = view * mat4(1.0f); // modle view matrix
+	pProg.setUniform("MV", mv);
+	pProg.setUniform("Proj", projection);
+
+	glDepthMask(GL_FALSE);
+	glBindVertexArray(particleArray[drawBuf]);
+	glVertexAttribDivisor(0, 1);
+	glVertexAttribDivisor(1, 1);
+	glVertexAttribDivisor(2, 1);
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, nParticles);
+	glBindVertexArray(0);
+	glDepthMask(GL_TRUE);
+
+	//swap buffers
+	drawBuf = 1 - drawBuf;
+
+	prog.use();
 }
 
 void SceneBasic_Uniform::computeLogAveLuminance() {
@@ -474,6 +515,9 @@ void SceneBasic_Uniform::computeLogAveLuminance() {
 		sum += logf(lum + 0.00001f);
 	}
 	prog.setUniform("AveLum", expf(sum / size));
+	pProg.use();
+	pProg.setUniform("AveLum", expf(sum / size));
+	prog.use();
 }
 
 void SceneBasic_Uniform::drawScene() {
@@ -573,18 +617,20 @@ void SceneBasic_Uniform::drawScene() {
 }
 
 void SceneBasic_Uniform::renderParticles() {
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	pProg.use();
 
 	glActiveTexture(GL_TEXTURE0);
-	Texture::loadTexture("helper/smoke.png");
+	glBindTexture(GL_TEXTURE_2D, smoke);
 
 	glActiveTexture(GL_TEXTURE1);
-	ParticleUtils::createRandomTex1D(nParticles * 3);
+	glBindTexture(GL_TEXTURE_1D, particleTex);
 
 	pProg.setUniform("Time", cTime);
 	pProg.setUniform("DeltaT", deltaT);
+
+	glm::mat4 mv = view * model; // modle view matrix
+	pProg.setUniform("MV", mv);
+	pProg.setUniform("Proj", projection);
 
 	// update pass
 	pProg.setUniform("Pass", 1);
@@ -604,11 +650,15 @@ void SceneBasic_Uniform::renderParticles() {
 	glDisable(GL_RASTERIZER_DISCARD);
 
 	// render pass
-	pProg.setUniform("Pass", 2);
+	/*pProg.setUniform("Pass", 2);
 
-	view = glm::lookAt(vec3(4.0f * cos(angle), 1.5f, 4.0f * sin(angle)),
-		vec3(0.0f, 1.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-	setMatrices(model, &pProg);
+	//view = glm::lookAt(vec3(4.0f * cos(angle), 1.5f, 4.0f * sin(angle)),
+		//vec3(0.0f, 1.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+	//setMatrices(model, &pProg);
+	glm::mat4 mv = view * model2; // modle view matrix
+	pProg.setUniform("MV", mv);
+	pProg.setUniform("Proj", projection);
+
 
 	glDepthMask(GL_FALSE);
 	glBindVertexArray(particleArray[drawBuf]);
@@ -620,7 +670,7 @@ void SceneBasic_Uniform::renderParticles() {
 	glDepthMask(GL_TRUE);
 
 	//swap buffers
-	drawBuf = 1 - drawBuf;
+	drawBuf = 1 - drawBuf;*/
 	prog.use();
 }
 

@@ -31,7 +31,7 @@ private:
     GLuint hdrTex, avgTex;
 
     // list of textures
-    GLuint metalTex, metalNormal, rustTex, rustNormal, woodTex, woodNormal;
+    GLuint metalTex, metalNormal, rustTex, rustNormal, woodTex, woodNormal, smoke, particleTex;
 
     std::unique_ptr<ObjMesh> crossbow;
     std::unique_ptr<ObjMesh> arrow;
