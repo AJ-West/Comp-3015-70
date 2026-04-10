@@ -63,8 +63,9 @@ void pass2(){
         //Colour.y = floor(Colour.y * levels)*scaleFactor;
         //Colour.z = floor(Colour.z * levels)*scaleFactor;
     }
-    FragColor = vec4(Colour, 1.0);   
-    FragColor.a = HDRTexColour.a;
+    FragColor = vec4(Colour, 1.0);
+    FragColor = vec4(mix(vec3(0,0,0), FragColor.xyz, Transp), FragColor.a);
+    FragColor.a *= Transp;
 }
 
 void main() {

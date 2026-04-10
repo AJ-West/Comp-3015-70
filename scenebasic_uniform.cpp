@@ -26,8 +26,8 @@ using glm::vec3;
 
 using glm::mat4;
 
-SceneBasic_Uniform::SceneBasic_Uniform() : sky(100.0f), angle(0.0f), drawBuf(1), cTime(0), deltaT(0), nParticles(4000),
-particleLifetime(5.5f), emitterPos(1, 0, 0), emitterDir(0, 2, 0) {
+SceneBasic_Uniform::SceneBasic_Uniform() : sky(100.0f), angle(0.0f), drawBuf(1), cTime(0), deltaT(0), nParticles(400),
+particleLifetime(1.5f), emitterPos(1, 0, 0), emitterDir(0, 2, 0) {
 	tPrev = 0;
 	angle = 0;
 }
@@ -140,7 +140,7 @@ void SceneBasic_Uniform::initScene()
 
 	pProg.use();
 
-	model = mat4(5.0f);
+	model = mat4(2.0f);
 
 	smoke = Texture::loadTexture("media/texture/smoke.png");
 	particleTex = ParticleUtils::createRandomTex1D(nParticles * 3);
@@ -479,10 +479,8 @@ void SceneBasic_Uniform::pass2() {
 
 	pProg.setUniform("Pass", 2);
 
-	view = glm::lookAt(vec3(4.0f * cos(angle), 1.5f, 4.0f * sin(angle)),
-		vec3(0.0f, 1.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+	view = mat4(1.0f);
 	projection = mat4(1.0f);
-	setMatrices(model, &pProg);
 	glm::mat4 mv = view * mat4(1.0f); // modle view matrix
 	pProg.setUniform("MV", mv);
 	pProg.setUniform("Proj", projection);
