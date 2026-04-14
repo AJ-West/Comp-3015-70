@@ -188,6 +188,7 @@
     <ClInclude Include="helper\utils.h" />
     <ClInclude Include="media\texture\cube.h" />
     <ClInclude Include="media\texture\texture.h" />
+    <ClInclude Include="particles.h" />
     <ClInclude Include="scenebasic_uniform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

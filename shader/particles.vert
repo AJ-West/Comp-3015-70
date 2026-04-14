@@ -29,7 +29,6 @@ uniform mat3 EmitterBasis;                      // Rotation around emitter
 // Transform matrices
 uniform mat4 MV;
 uniform mat4 Proj;
-uniform vec3 camPos;
 
 uniform sampler1D RandomTex;
 

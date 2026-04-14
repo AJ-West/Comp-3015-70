@@ -154,5 +154,8 @@
     <ClInclude Include="helper\random.h">
       <Filter>helper</Filter>
     </ClInclude>
+    <ClInclude Include="particles.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
