@@ -133,7 +133,6 @@ void SceneBasic_Uniform::initScene()
 		
 		}
 		crossbows.emplace_back(new crossBow(pos, dir));
-		//crossbows[i]->initBuffers(&pProg);
 	}
 	
 	createCloudQuad();
@@ -151,7 +150,10 @@ void SceneBasic_Uniform::initScene()
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_1D, particleTex);
 
-	initBuffers();
+	for (int i = 0; i < 16; i++) {
+		crossbows[i]->initBuffers(&pProg);
+	}
+	//initBuffers();
 	
 	pProg.setUniform("RandomTex", 1);
 	pProg.setUniform("ParticleTex", 0);
@@ -469,34 +471,6 @@ void SceneBasic_Uniform::pass2() {
 	glBindVertexArray(quad);
 	glDrawArrays(GL_TRIANGLES, 0,6);
 
-	pProg.use();
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, smoke);
-
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_1D, particleTex);
-
-	pProg.setUniform("Pass", 2);
-
-	view = mat4(1.0f);
-	projection = mat4(1.0f);
-	glm::mat4 mv = view * mat4(1.0f); // modle view matrix
-	pProg.setUniform("MV", mv);
-	pProg.setUniform("Proj", projection);
-
-	glDepthMask(GL_FALSE);
-	glBindVertexArray(particleArray[drawBuf]);
-	glVertexAttribDivisor(0, 1);
-	glVertexAttribDivisor(1, 1);
-	glVertexAttribDivisor(2, 1);
-	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, nParticles);
-	glBindVertexArray(0);
-	glDepthMask(GL_TRUE);
-
-	//swap buffers
-	drawBuf = 1 - drawBuf;
-
 	prog.use();
 }
 
@@ -556,7 +530,6 @@ void SceneBasic_Uniform::drawScene() {
 		prog.setUniform(name.str().c_str(), view * glm::vec4(x * cos(angle), 1.2f, (z + 1.0f) * sin(angle), 1.0f));
 	}
 
-
 	prog.setUniform("numOfTex", 1);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, woodTex);
@@ -577,7 +550,6 @@ void SceneBasic_Uniform::drawScene() {
 		}
 	}
 	model1 = mat4(1.0f);
-
 
 	prog.setUniform("numOfTex", 2);
 	glActiveTexture(GL_TEXTURE2);
@@ -602,11 +574,6 @@ void SceneBasic_Uniform::drawScene() {
 		setMatrices(model2, &prog);
 		prog.setUniform("Model", model2);		
 		crossbow->render();
-
-		// need to set matrices for particle prog before pass 2
-		//pProg.use();
-		//setMatrices(model2, &pProg);
-		//crossbows[i]->renderParticles(&pProg);
 	}
 	prog.use();
 	model2 = mat4(1.0f);
@@ -626,17 +593,22 @@ void SceneBasic_Uniform::renderParticles() {
 	pProg.setUniform("Time", cTime);
 	pProg.setUniform("DeltaT", deltaT);
 
-	model = mat4(1.0f);
-	model = translate(model, vec3(1.0f, 1.0f, 5.0f));
-
-	glm::mat4 mv = view * model; // modle view matrix
-	pProg.setUniform("MV", mv);
-	pProg.setUniform("Proj", projection);
-
 	// update pass
 	pProg.setUniform("Pass", 1);
 
-	glEnable(GL_RASTERIZER_DISCARD);
+	for (int i = 0; i < 16; i++) {
+		model = mat4(1.0f);
+		model = translate(model, crossbows[i]->getPos());
+
+		glm::mat4 mv = view * model; // modle view matrix
+		pProg.setUniform("MV", mv);
+		pProg.setUniform("camPos", camera->getPosition());
+		pProg.setUniform("Proj", projection);
+
+		crossbows[i]->updateParticles(&pProg);
+	}
+
+	/*glEnable(GL_RASTERIZER_DISCARD);
 	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[drawBuf]);
 	glBeginTransformFeedback(GL_POINTS);
 
@@ -648,20 +620,38 @@ void SceneBasic_Uniform::renderParticles() {
 	glBindVertexArray(0);
 
 	glEndTransformFeedback();
-	glDisable(GL_RASTERIZER_DISCARD);
+	glDisable(GL_RASTERIZER_DISCARD);*/
 
-	// render pass
-	/*pProg.setUniform("Pass", 2);
+	/*pProg.use();
 
-	//view = glm::lookAt(vec3(4.0f * cos(angle), 1.5f, 4.0f * sin(angle)),
-		//vec3(0.0f, 1.5f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-	//setMatrices(model, &pProg);
-	glm::mat4 mv = view * model2; // modle view matrix
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, smoke);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_1D, particleTex);*/
+
+	pProg.setUniform("Pass", 2);
+
+	//view = mat4(1.0f);
+	//projection = mat4(1.0f);
+	//glm::mat4 mv = view * mat4(1.0f); // modle view matrix
+	glm::mat4 mv = view * model; // modle view matrix
 	pProg.setUniform("MV", mv);
+	pProg.setUniform("camPos", camera->getPosition());
 	pProg.setUniform("Proj", projection);
 
+	for (int i = 0; i < 16; i++) {
+		model = mat4(1.0f);
+		model = translate(model, crossbows[i]->getPos());
 
-	glDepthMask(GL_FALSE);
+		glm::mat4 mv = view * model; // modle view matrix
+		pProg.setUniform("MV", mv);
+		pProg.setUniform("camPos", camera->getPosition());
+		pProg.setUniform("Proj", projection);
+
+		crossbows[i]->renderParticles(&pProg);
+	}
+	/*glDepthMask(GL_FALSE);
 	glBindVertexArray(particleArray[drawBuf]);
 	glVertexAttribDivisor(0, 1);
 	glVertexAttribDivisor(1, 1);
@@ -672,6 +662,7 @@ void SceneBasic_Uniform::renderParticles() {
 
 	//swap buffers
 	drawBuf = 1 - drawBuf;*/
+
 	prog.use();
 }
 

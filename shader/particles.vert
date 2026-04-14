@@ -29,6 +29,7 @@ uniform mat3 EmitterBasis;                      // Rotation around emitter
 // Transform matrices
 uniform mat4 MV;
 uniform mat4 Proj;
+uniform vec3 camPos;
 
 uniform sampler1D RandomTex;
 
@@ -40,10 +41,9 @@ const vec3 offsets[] = vec3[](vec3(-0.5,-0.5,0), vec3(0.5,-0.5,0), vec3(0.5,0.5,
 const vec2 texCoords[] = vec2[](vec2(0,0), vec2(1,0), vec2(1,1), vec2(0,0), vec2(1,1), vec2(0,1));
 
 vec3 randomInitialVelocity(){
-    //float theta = mix(0.0, PI/8.0, texelFetch(RandomTex, 3*gl_VertexID, 0).r);
     float theta = mix(0.0, PI/2.0, texelFetch(RandomTex, 3*gl_VertexID, 0).r);
     float phi = mix(0.0, 2.0*PI, texelFetch(RandomTex, 3*gl_VertexID+1, 0).r);
-    float velocity = mix(1.25, 1.5, texelFetch(RandomTex, 3*gl_VertexID+2, 0).r);
+    float velocity = mix(0.5, 0.75, texelFetch(RandomTex, 3*gl_VertexID+2, 0).r);
     vec3 v = vec3(sin(theta) * cos(phi), cos(theta), sin(theta) * sin(phi));
     return normalize(EmitterBasis * v) * velocity;
 }
@@ -68,7 +68,8 @@ void render(){
     Transp = 0.0;
     vec3 posCam = vec3(0.0);
     if(VertexAge >= 0.0 && VertexAge <= ParticleLifetime){
-        posCam = (MV * vec4(VertexPosition,1)).xyz + offsets[gl_VertexID] * ParticleSize;
+        //posCam = (MV * vec4(VertexPosition,1)).xyz + (offsets[gl_VertexID] - camPos) * ParticleSize;
+        posCam = (MV * vec4(VertexPosition,1)).xyz + (offsets[gl_VertexID]) * ParticleSize;
         Transp = clamp(1.0 - VertexAge / ParticleLifetime, 0, 1);
     }
     TexCoord = texCoords[gl_VertexID];

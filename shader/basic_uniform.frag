@@ -178,10 +178,6 @@ void clouds(){
 
     float dist = abs(sqrt(z*z + x*x));
 
-    fogFactor = (Fog.MaxDist - dist)/(Fog.MaxDist - Fog.MinDist);
-
-    fogFactor = clamp(fogFactor,0.0,1.0); 
-
     vec4 cloudTex = CloudColor;
 
     t -= dist/25;

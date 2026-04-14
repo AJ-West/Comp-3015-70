@@ -12,13 +12,13 @@ private:
 
 	int delayCount = 0;
 
-	int nParticles = 400;
+	int nParticles = 40;
 	float time = 0;
-	float particleLifetime = 10.5f;
+	float particleLifetime = 0.5f;
 	float deltaT = 0;
 
 	// position and direction of particle emitter
-	vec3 emitterPos = vec3(0,0,0);
+	vec3 emitterPos = vec3(1,0,0);
 	vec3 emitterDir = vec3(0,2,0);
 
 	//particle buffers
@@ -151,30 +151,26 @@ public:
 
         glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
 
-        prog->use();
-        prog->setUniform("RandomTex", 1);
-        prog->setUniform("ParticleTex", 0);
-        prog->setUniform("ParticleLifetime", particleLifetime);
-        prog->setUniform("Accel", vec3(0.0f, 0.0f, 0.0f));
-        prog->setUniform("ParticleSize", 500.5f);
-        prog->setUniform("Emitter", emitterPos);
-        prog->setUniform("EmitterBasis", ParticleUtils::makeArbitraryBasis(emitterDir));
+        setProgSettings(prog);
 
         glActiveTexture(GL_TEXTURE1);
         ParticleUtils::createRandomTex1D(nParticles * 3);
 	}
 
-    void renderParticles(GLSLProgram* prog) {
-        glActiveTexture(GL_TEXTURE0);
-        Texture::loadTexture("helper/smoke.png");
+    void setProgSettings(GLSLProgram* prog) {
+        prog->use();
+        prog->setUniform("RandomTex", 1);
+        prog->setUniform("ParticleTex", 0);
+        prog->setUniform("ParticleLifetime", particleLifetime);
+        prog->setUniform("Accel", vec3(0.0f, 0.0f, 0.0f));
+        prog->setUniform("ParticleSize", 0.5f);
+        //prog->setUniform("Emitter", emitterPos + pos);
+        prog->setUniform("Emitter", emitterPos);
+        prog->setUniform("EmitterBasis", ParticleUtils::makeArbitraryBasis(emitterDir));
+    }
 
-        
-
-        prog->setUniform("Time", time);
-        prog->setUniform("DeltaT", deltaT);
-
-        // update pass
-        prog->setUniform("Pass", 1);
+    void updateParticles(GLSLProgram* prog) {
+        setProgSettings(prog);
 
         glEnable(GL_RASTERIZER_DISCARD);
         glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedback[drawBuf]);
@@ -189,9 +185,10 @@ public:
 
         glEndTransformFeedback();
         glDisable(GL_RASTERIZER_DISCARD);
+    }
 
-        // render pass
-        prog->setUniform("Pass", 2);
+    void renderParticles(GLSLProgram* prog) {
+        setProgSettings(prog);
 
         glDepthMask(GL_FALSE);
         glBindVertexArray(particleArray[drawBuf]);
