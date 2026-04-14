@@ -37,7 +37,6 @@ private:
 public:
 	crossBow(vec3 position, int direction, GLSLProgram* prog) :pos(position), dir(direction) {
 		rotation = rand() % 91;
-        spawnParticles(prog);
 	}
 
     void update(float t, GLSLProgram* prog) {
@@ -75,11 +74,15 @@ public:
 	}
 
     void updateParticles(GLSLProgram* prog) {
-        curParticles->updateParticles();
+		if (curParticles) {
+			curParticles->updateParticles();
+		}
     }
 
     void renderParticles(GLSLProgram* prog) {
-        curParticles->renderParticles();
+		if (curParticles) {
+			curParticles->renderParticles();
+		}
     }
 
 	vec3 getPos() { return pos; }

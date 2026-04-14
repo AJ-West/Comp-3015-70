@@ -63,5 +63,4 @@ C:\Users\gamin\Documents\Final year uni\Comp-3015-70\crossbow.h(39,21): warning 
   (compiling source file 'scenebasic_uniform.cpp')
   
 C:\Users\gamin\Documents\Final year uni\Comp-3015-70\scenebasic_uniform.cpp(37,17): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Project_Template.vcxproj -> C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\Project_Template.exe
