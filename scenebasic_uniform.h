@@ -12,6 +12,7 @@
 #include "helper/torus.h"
 #include "media/texture/cube.h"
 #include "helper/skybox.h"
+#include "helper/plane.h"
 
 #include "helper/objmesh.h"
 
@@ -31,7 +32,7 @@ private:
     GLuint hdrTex, avgTex;
 
     // list of textures
-    GLuint metalTex, metalNormal, rustTex, rustNormal, woodTex, woodNormal, smoke, particleTex;
+    GLuint metalTex, metalNormal, rustTex, rustNormal, woodTex, woodNormal, smoke, particleTex, flagTex;
 
     std::unique_ptr<ObjMesh> crossbow;
     std::unique_ptr<ObjMesh> arrow;
@@ -53,6 +54,11 @@ private:
     GLuint feedback[2];
 
     GLuint drawBuf;
+
+    glm::vec3 fPos;
+    glm::vec3 fRotation;
+
+    Plane plane;
 
     int nParticles;
     float cTime, particleLifetime, deltaT;

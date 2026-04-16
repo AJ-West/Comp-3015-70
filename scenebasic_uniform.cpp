@@ -27,7 +27,7 @@ using glm::vec3;
 using glm::mat4;
 
 SceneBasic_Uniform::SceneBasic_Uniform() : sky(100.0f), angle(0.0f), drawBuf(1), cTime(0), deltaT(0), nParticles(400),
-particleLifetime(1.5f), emitterPos(1, 0, 0), emitterDir(0, 2, 0) {
+particleLifetime(1.5f), emitterPos(1, 0, 0), emitterDir(0, 2, 0), plane(16.0f, 10.0f, 200, 2), fPos(0, 0, 0), fRotation(0, 0, 0) {
 	tPrev = 0;
 	angle = 0;
 }
@@ -79,6 +79,8 @@ void SceneBasic_Uniform::initScene()
 	rustNormal = Texture::loadTexture("media/texture/rust/rust_normalMap.png");
 	woodTex = Texture::loadTexture("media/texture/wood/wood.png");
 	woodNormal = Texture::loadTexture("media/texture/wood/wood_normalMap.png");
+
+	flagTex = Texture::loadTexture("media/texture/flag.png");
 
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, metalTex);
@@ -491,6 +493,25 @@ void SceneBasic_Uniform::drawScene() {
 	model2 = mat4(1.0f);
 
 	renderParticles();
+
+	prog.setUniform("Time", cTime);
+	prog.setUniform("flag", true);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, flagTex);
+
+	prog.setUniform("Material.Kd", 1.0f, 1.0f, 1.0f);
+	prog.setUniform("Material.Ks", 1.0f, 1.0f, 1.0f);
+	prog.setUniform("Material.Ka", 1.1f, 1.0f, 1.0f);
+	prog.setUniform("Material.Shininess", 1.0f);
+
+	model = mat4(1.0f);
+	model = glm::rotate(model, glm::radians(50.0f), vec3(1.0f, 0.0f, 0.0f));
+	model = scale(model, vec3(0.025f, 0.025f, 0.025f));
+	setMatrices(model, &prog);
+	plane.render();
+
+	prog.setUniform("flag", false);
 }
 
 void SceneBasic_Uniform::renderParticles() {

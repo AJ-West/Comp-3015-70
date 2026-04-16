@@ -72,6 +72,9 @@
     <ClCompile Include="helper\noisetex.cpp">
       <Filter>helper</Filter>
     </ClCompile>
+    <ClCompile Include="helper\plane.cpp">
+      <Filter>helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\basic_uniform.frag">
@@ -155,6 +158,12 @@
       <Filter>helper</Filter>
     </ClInclude>
     <ClInclude Include="particles.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\plane.h">
+      <Filter>helper</Filter>
+    </ClInclude>
+    <ClInclude Include="flag.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,6 +4,7 @@
 
 //current position from last stage
 in vec3 crntPosFrag;
+in vec4 Position;
 //current normal from last stage
 in vec3 crntNormFrag;
 // tex coord from last stage
@@ -81,6 +82,25 @@ void getCamSpaceValues(out vec3 normal, out vec4 position){
     normal = normalize(NormalMatrix * crntNormFrag);
 
     position = ModelViewMatrix * vec4(crntPosFrag, 1.0);
+}
+
+vec3 blinnPhong(int light, vec3 position, vec3 n){
+    //Ambient
+    vec3 ambient = Lights[light].La*Material.Ka;
+    
+    vec3 lightDir = normalize(Lights[light].Position.xyz - position);
+    float sDotn = max(dot(lightDir, n), 0.0);
+    vec3 diffuse = Lights[light].Ld * Material.Kd * sDotn;
+
+    vec3 specular = vec3(0.0);
+    if (sDotn>0.0){
+        vec3 v = normalize(-position.xyz);
+        vec3 h = normalize(v+lightDir);
+        float specAmount = pow(max(dot(h, n), 0.0), Material.Shininess);
+        specular = specAmount * Lights[light].Ls * Material.Ks;
+    }
+
+    return ambient + diffuse + specular;
 }
 
 vec3 blingPhongModelNormal(int light, vec3 position, vec3 normal, mat3 objectLocal){
@@ -188,26 +208,36 @@ void clouds(){
     HDRColor = color;
 }
 
-void pass1(){
-    vec4 position;
-    mat3 objectLocal;
-    calcNormalMapValues(position, objectLocal);
-
-    vec3 norm;
-    vec3 texColor;
-    norm = mixNorm();
-    texColor = mixTexture();    
-
-    calcFog(position);
-
+uniform bool flag;
+void flags(){
     for (int i=0; i<3; i++){
-        HDRColor.rgb += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
+        HDRColor.rgb += blinnPhong(i, Position.xyz, crntNormFrag);
     }
-
-    HDRColor.rgb *= texColor;
-    if(abs(position.z) > Fog.MinDist)
-    HDRColor.rgb = mix(Fog.Colour, HDRColor.rgb, fogFactor);
+    
+    HDRColor.rgb *= texture(Tex1, TexCoord).rgb;
     HDRColor.a = 1.0;
+}
+
+void pass1(){
+        vec4 position;
+        mat3 objectLocal;
+        calcNormalMapValues(position, objectLocal);
+
+        vec3 norm;
+        vec3 texColor;
+        norm = mixNorm();
+        texColor = mixTexture();    
+
+        calcFog(position);
+
+        for (int i=0; i<3; i++){
+            HDRColor.rgb += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
+        }
+
+        HDRColor.rgb *= texColor;
+        if(abs(position.z) > Fog.MinDist)
+        HDRColor.rgb = mix(Fog.Colour, HDRColor.rgb, fogFactor);
+        HDRColor.a = 1.0;
 }
 
 void pass2(){
@@ -252,6 +282,8 @@ void main() {
             skybox();
         else if(isClouds)
             clouds();
+        else if(flag)
+            flags();
         else
             pass1();
     }
