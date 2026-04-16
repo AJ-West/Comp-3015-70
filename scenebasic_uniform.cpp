@@ -27,7 +27,7 @@ using glm::vec3;
 using glm::mat4;
 
 SceneBasic_Uniform::SceneBasic_Uniform() : sky(100.0f), angle(0.0f), drawBuf(1), cTime(0), deltaT(0), nParticles(400),
-particleLifetime(1.5f), emitterPos(1, 0, 0), emitterDir(0, 2, 0), plane(16.0f, 10.0f, 200, 2), fPos(0, 0, 0), fRotation(0, 0, 0) {
+particleLifetime(1.5f), emitterPos(1, 0, 0), emitterDir(0, 2, 0) {
 	tPrev = 0;
 	angle = 0;
 }
@@ -161,6 +161,11 @@ void SceneBasic_Uniform::initScene()
 	pProg.setUniform("EmitterBasis", ParticleUtils::makeArbitraryBasis(emitterDir));
 
 	prog.use();
+
+	flags.emplace_back(new Flag(vec3(2.0, 1.0, 0.0), vec3(90.0, 0.0, 0.0)));
+	flags.emplace_back(new Flag(vec3(4.0, 1.0, 2.0), vec3(90.0, 90.0, 0.0)));
+	flags.emplace_back(new Flag(vec3(2.0, 1.0, 4.0), vec3(90.0, 180.0, 0.0)));
+	flags.emplace_back(new Flag(vec3(0.0, 1.0, 2.0), vec3(90.0, 270.0, 0.0)));
 }
 
 void SceneBasic_Uniform::setUpFullScreenQuad() {
@@ -494,22 +499,14 @@ void SceneBasic_Uniform::drawScene() {
 
 	renderParticles();
 
-	prog.setUniform("Time", cTime);
 	prog.setUniform("flag", true);
 
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, flagTex);
-
-	prog.setUniform("Material.Kd", 1.0f, 1.0f, 1.0f);
-	prog.setUniform("Material.Ks", 1.0f, 1.0f, 1.0f);
-	prog.setUniform("Material.Ka", 1.1f, 1.0f, 1.0f);
-	prog.setUniform("Material.Shininess", 1.0f);
-
-	model = mat4(1.0f);
-	model = glm::rotate(model, glm::radians(50.0f), vec3(1.0f, 0.0f, 0.0f));
-	model = scale(model, vec3(0.025f, 0.025f, 0.025f));
-	setMatrices(model, &prog);
-	plane.render();
+	
+	for (auto& flag : flags) {
+		flag->render(&prog, model, view, projection, cTime);
+	}
 
 	prog.setUniform("flag", false);
 }
@@ -537,7 +534,7 @@ void SceneBasic_Uniform::renderParticles() {
 		pProg.setUniform("Proj", projection);
 
 		// update pass
-		pProg.setUniform("Pass", 1);		
+		pProg.setUniform("Pass", 1);	
 
 		crossbows[i]->updateParticles(&pProg);
 

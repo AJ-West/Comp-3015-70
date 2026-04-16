@@ -13,6 +13,7 @@
 #include "media/texture/cube.h"
 #include "helper/skybox.h"
 #include "helper/plane.h"
+#include "flag.h"
 
 #include "helper/objmesh.h"
 
@@ -55,10 +56,7 @@ private:
 
     GLuint drawBuf;
 
-    glm::vec3 fPos;
-    glm::vec3 fRotation;
-
-    Plane plane;
+    std::vector<Flag*> flags;
 
     int nParticles;
     float cTime, particleLifetime, deltaT;

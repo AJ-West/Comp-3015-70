@@ -5,6 +5,8 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#include "media/texture/texture.h"
+
 class Camera;
 
 extern Camera* camera;
