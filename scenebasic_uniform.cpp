@@ -38,8 +38,6 @@ void SceneBasic_Uniform::initScene()
 
     compile();
 
-	//glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-
 	// Enable alpha blending
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -494,7 +492,6 @@ void SceneBasic_Uniform::drawScene() {
 		prog.setUniform("Model", model2);		
 		crossbow->render();
 	}
-	prog.use();
 	model2 = mat4(1.0f);
 
 	renderParticles();
