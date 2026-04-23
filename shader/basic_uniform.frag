@@ -189,7 +189,7 @@ void flags(){
         FragColor.rgb += blinnPhong(i, Position.xyz, crntNormFrag);
     }
     
-    FragColor.rgb *= texture(Tex1, TexCoord).rgb;
+    FragColor.rgb = texture(Tex1, TexCoord).rgb;
     FragColor.a = 1.0;
 }
 
@@ -201,7 +201,8 @@ void pass1(){
         vec3 norm;
         vec3 texColor;
         norm = mixNorm();
-        texColor = mixTexture();    
+        texColor = mixTexture();  
+        
 
         calcFog(position);
 
@@ -209,7 +210,7 @@ void pass1(){
             FragColor.rgb += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
         }
 
-        FragColor.rgb *= texColor;
+        FragColor.rgb = texColor;
         if(abs(position.z) > Fog.MinDist)
         FragColor.rgb = mix(Fog.Colour, FragColor.rgb, fogFactor);
         FragColor.a = 1.0;

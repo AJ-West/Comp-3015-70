@@ -30,6 +30,8 @@ uniform float Amp = 0.05;
 uniform mat4 ModelViewMatrix;
 uniform mat3 NormalMatrix;
 
+const vec2 texCoords[] = vec2[](vec2(0,0), vec2(1,0), vec2(1,1), vec2(0,0), vec2(1,1), vec2(0,1));
+
 void main()
 {
     vec4 pos = vec4(VertexPosition, 1.0);
@@ -56,5 +58,6 @@ void main()
     }
 
     TexCoord = VertexTexCoord;
+
     gl_Position = MVP * pos;
 }

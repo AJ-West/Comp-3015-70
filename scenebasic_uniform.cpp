@@ -79,26 +79,21 @@ void SceneBasic_Uniform::initScene()
 
 	flagTex = Texture::loadTexture("media/texture/flag.png");
 
-	GLuint tex1 = Texture::loadTexture("media/texture/metal.png");
-	GLuint norm1 = Texture::loadTexture("media/texture/metal/metal_normalMap.png");
-	GLuint tex2 = Texture::loadTexture("media/texture/rust/rust.png");
-	GLuint norm2 = Texture::loadTexture("media/texture/rust/rust_normalMap.png");
-
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, tex1);
+	glBindTexture(GL_TEXTURE_2D, metalTex);
 
 	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, norm1);
+	glBindTexture(GL_TEXTURE_2D, metalNormal);
 
 	glActiveTexture(GL_TEXTURE4);
-	glBindTexture(GL_TEXTURE_2D, tex2);
+	glBindTexture(GL_TEXTURE_2D, rustTex);
 
 	glActiveTexture(GL_TEXTURE5);
-	glBindTexture(GL_TEXTURE_2D, norm2);
+	glBindTexture(GL_TEXTURE_2D, rustNormal);
 
 	// loads required models
-	arrow = ObjMesh::load("media/models/arrow.obj", false, true);
-	crossbow = ObjMesh::load("media/models/crossbow.obj", false, true);
+	arrow = ObjMesh::load("media/models/arrow.obj", false, false);
+	crossbow = ObjMesh::load("media/models/crossbow.obj", false, false);
 
 	//sets up skybox
 	skyModel = mat4(1.0f);
@@ -425,8 +420,8 @@ void SceneBasic_Uniform::drawScene() {
 
 	prog.setUniform("flag", true);
 
-	//glActiveTexture(GL_TEXTURE2);
-	//glBindTexture(GL_TEXTURE_2D, flagTex);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, flagTex);
 	
 	for (auto& flag : flags) {
 		flag->render(&prog, model, view, projection, cTime);
