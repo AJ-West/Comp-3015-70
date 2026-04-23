@@ -15,7 +15,6 @@ in vec4 vertTangent;
 uniform bool isSkybox;
 uniform int numOfTex;
 
-layout(binding=0) uniform sampler2D HDRTex;
 layout(binding=1) uniform samplerCube SkyBoxTex; // want to sort texture binding values
 layout(binding=2) uniform sampler2D Tex1;
 layout(binding=3) uniform sampler2D Norm1;
@@ -23,30 +22,6 @@ layout(binding=4) uniform sampler2D Tex2;
 layout(binding=5) uniform sampler2D Norm2;
 
 layout (location = 0) out vec4 FragColor;
-layout (location = 1) out vec4 HDRColor;
-
-//for HDR
-uniform int Pass; // Pass number
-uniform float AveLum;
-
-//XYZ/RGB conversion matrices from http://www.brucelindbloom.com/index.html?Eqn_RGB_XYZ_Matrix.html
-uniform mat3 rgb2xyz = mat3(
-0.4124564, 0.2126729, 0.0193339,
-0.3575761, 0.7151522, 0.1191920,
-0.1804375, 0.0721750, 0.9503041
-);
-
-uniform mat3 xyz2rgb = mat3(
-3.2404542, -0.9692660, 0.0556434,
--1.5371385, 1.8760108, -0.2040259 ,
--0.4985314, 0.0415560, 1.0572252
-);
-
-uniform float Exposure = 0.1;
-uniform float White = 0.928;
-uniform bool DoToneMap = true;
-
-//HDR end
 
 uniform struct FogInfo{
     float MaxDist;
@@ -205,17 +180,17 @@ void clouds(){
 
     vec4 color = mix(skyTex, cloudTex, t);
 
-    HDRColor = color;
+    FragColor = color;
 }
 
 uniform bool flag;
 void flags(){
     for (int i=0; i<3; i++){
-        HDRColor.rgb += blinnPhong(i, Position.xyz, crntNormFrag);
+        FragColor.rgb += blinnPhong(i, Position.xyz, crntNormFrag);
     }
     
-    HDRColor.rgb *= texture(Tex1, TexCoord).rgb;
-    HDRColor.a = 1.0;
+    FragColor.rgb *= texture(Tex1, TexCoord).rgb;
+    FragColor.a = 1.0;
 }
 
 void pass1(){
@@ -231,62 +206,26 @@ void pass1(){
         calcFog(position);
 
         for (int i=0; i<3; i++){
-            HDRColor.rgb += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
+            FragColor.rgb += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
         }
 
-        HDRColor.rgb *= texColor;
+        FragColor.rgb *= texColor;
         if(abs(position.z) > Fog.MinDist)
-        HDRColor.rgb = mix(Fog.Colour, HDRColor.rgb, fogFactor);
-        HDRColor.a = 1.0;
-}
-
-void pass2(){
-    vec4 HDRTexColour = texture(HDRTex, TexCoord);
-
-    vec3 Colour = HDRTexColour.rgb;
-
-    //Convert to XYZ
-    vec3 xyzCol = rgb2xyz*Colour;
-
-    //Convert to xyY
-    float xyzSum = xyzCol.x + xyzCol.y + xyzCol.z;
-
-    vec3 xyYCol = vec3(xyzCol.x/xyzSum, xyzCol.y/xyzSum, xyzCol.z);
-
-    //Apply tone mapping operation to luminance
-    float L = (Exposure * xyYCol.z)/AveLum;
-    L = (L*(1+L/(White*White)))/(1+L);
-
-    //Using new luminance convert back to XYZ
-    xyzCol.x = (L*xyYCol.x)/xyYCol.y;
-    xyzCol.y = L;
-    xyzCol.z = (L*(1-xyYCol.x-xyYCol.y))/xyYCol.y;
-
-    //Convert back to RGB and send outpput to buffer
-    if(DoToneMap){
-        Colour = xyz2rgb * xyzCol;
-        //Colour.x = floor(Colour.x * levels)*scaleFactor;
-        //Colour.y = floor(Colour.y * levels)*scaleFactor;
-        //Colour.z = floor(Colour.z * levels)*scaleFactor;
-    }
-    FragColor = vec4(Colour, 1.0);    
+        FragColor.rgb = mix(Fog.Colour, FragColor.rgb, fogFactor);
+        FragColor.a = 1.0;
 }
 
 void skybox(){
-    HDRColor = texture(SkyBoxTex, normalize(crntPosFrag));
+    FragColor = texture(SkyBoxTex, normalize(crntPosFrag));
 }
 
 void main() {
-    if(Pass == 1){
-        if(isSkybox) // if skybox
-            skybox();
-        else if(isClouds)
-            clouds();
-        else if(flag)
-            flags();
-        else
-            pass1();
-    }
-    else if(Pass == 2)
-    pass2();    
+    if(isSkybox) // if skybox
+        skybox();
+    else if(isClouds)
+        clouds();
+    else if(flag)
+        flags();
+    else
+        pass1();
 }

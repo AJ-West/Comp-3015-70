@@ -33,7 +33,7 @@ struct Arrows {
 
 	bool inUse = false;
 
-	float speed = 0.05f;
+	float speed = 0.0005f;
 
 	int lifeTime = 0;
 
@@ -43,7 +43,7 @@ struct Arrows {
 		pos = position;
 		direction = dir;
 		inUse = true;
-		lifeTime = 60;
+		lifeTime = 6000;
 	}
 
 	void update() { // move arrows

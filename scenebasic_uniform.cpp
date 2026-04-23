@@ -64,14 +64,13 @@ void SceneBasic_Uniform::initScene()
 	prog.use();
 
 	setupFBO();
-	setUpFullScreenQuad();
 
 	prog.setUniform("Model", model1);
 
 	setProgDefaults(&prog);
 
 	//loads all textures that will be required
-	metalTex = Texture::loadTexture("media/texture/metal/metal.png");
+	metalTex = Texture::loadTexture("media/texture/metal.png");
 	metalNormal = Texture::loadTexture("media/texture/metal/metal_normalMap.png");
 	rustTex = Texture::loadTexture("media/texture/rust/rust.png");
 	rustNormal = Texture::loadTexture("media/texture/rust/rust_normalMap.png");
@@ -80,17 +79,22 @@ void SceneBasic_Uniform::initScene()
 
 	flagTex = Texture::loadTexture("media/texture/flag.png");
 
+	GLuint tex1 = Texture::loadTexture("media/texture/metal.png");
+	GLuint norm1 = Texture::loadTexture("media/texture/metal/metal_normalMap.png");
+	GLuint tex2 = Texture::loadTexture("media/texture/rust/rust.png");
+	GLuint norm2 = Texture::loadTexture("media/texture/rust/rust_normalMap.png");
+
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, metalTex);
+	glBindTexture(GL_TEXTURE_2D, tex1);
 
 	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, metalNormal);
+	glBindTexture(GL_TEXTURE_2D, norm1);
 
 	glActiveTexture(GL_TEXTURE4);
-	glBindTexture(GL_TEXTURE_2D, rustTex);
+	glBindTexture(GL_TEXTURE_2D, tex2);
 
 	glActiveTexture(GL_TEXTURE5);
-	glBindTexture(GL_TEXTURE_2D, rustNormal);
+	glBindTexture(GL_TEXTURE_2D, norm2);
 
 	// loads required models
 	arrow = ObjMesh::load("media/models/arrow.obj", false, true);
@@ -164,36 +168,6 @@ void SceneBasic_Uniform::initScene()
 	flags.emplace_back(new Flag(vec3(4.0, 1.0, 2.0), vec3(90.0, 90.0, 0.0)));
 	flags.emplace_back(new Flag(vec3(2.0, 1.0, 4.0), vec3(90.0, 180.0, 0.0)));
 	flags.emplace_back(new Flag(vec3(0.0, 1.0, 2.0), vec3(90.0, 270.0, 0.0)));
-}
-
-void SceneBasic_Uniform::setUpFullScreenQuad() {
-	GLfloat verts[] = {
-		-1.0f, -1.0f, 0.0f, 1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-		-1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 0.0f, -1.0f, 1.0f, 0.0f,
-	};
-	GLfloat tc[] = {
-		0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
-	};
-
-	//Set up the buffers
-	unsigned int handle[2];
-	glGenBuffers(2, handle);
-	glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
-	glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(float), verts, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
-	glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), tc, GL_STATIC_DRAW);
-
-	//Sets up the vertex array object
-	glGenVertexArrays(1, &quad);
-	glBindVertexArray(quad);
-	glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
-	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0); //Vertex position
-	glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
-	glVertexAttribPointer((GLuint)2, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(2); //Texture coords
-	glBindVertexArray(0);
 }
 
 void SceneBasic_Uniform::setProgDefaults(GLSLProgram* cProg) {
@@ -284,6 +258,7 @@ void SceneBasic_Uniform::update( float t )
 
 				float dist = sqrt(xDist * xDist + zDist * zDist);
 				if (dist < 0.035f) {
+					std::cout << "shot" << std::endl;
 					exit(EXIT_SUCCESS);
 				}
 
@@ -309,9 +284,9 @@ void SceneBasic_Uniform::updateCamera(int direction) {
 
 void SceneBasic_Uniform::render()
 {
-	pass1();
-	computeLogAveLuminance();
-	pass2();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	projection = glm::perspective(glm::radians(70.0f), (float)width / height, 0.01f, 100.0f);
+	drawScene();
 }
 
 void SceneBasic_Uniform::resize(int w, int h)
@@ -359,54 +334,6 @@ void SceneBasic_Uniform::setupFBO() {
 	GLenum drawBuffers[] = { GL_NONE, GL_COLOR_ATTACHMENT0 };
 	glDrawBuffers(2, drawBuffers);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void SceneBasic_Uniform::pass1() {
-	// Do first pass to calculate scene lighting and textures to be passed to calculate HDR
-	prog.setUniform("Pass", 1);
-	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-	glViewport(0, 0, width, height);
-	glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	projection = glm::perspective(glm::radians(70.0f), (float)width / height, 0.01f, 100.0f);
-	drawScene();
-}
-
-void SceneBasic_Uniform::pass2() {
-	prog.setUniform("Pass", 2);
-	//Revert to default framebuffer
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glDisable(GL_DEPTH_TEST);
-
-	view = mat4(1.0f);
-	projection = mat4(1.0f);
-	setMatrices(mat4(1.0f), &prog);
-
-	//Render the quad
-	glBindVertexArray(quad);
-	glDrawArrays(GL_TRIANGLES, 0,6);
-
-	prog.use();
-}
-
-void SceneBasic_Uniform::computeLogAveLuminance() {
-	// Works out the average luminance for a pixel based off its surrounding pixels
-	int size = width * height;
-	std::vector<GLfloat> texData(size * 3);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, hdrTex);
-	glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_FLOAT, texData.data());
-	float sum = 0.0f;
-	for (int i = 0; i < size; i++) {
-		float lum = glm::dot(vec3(texData[i * 3 + 0], texData[i * 3 + 1], texData[i * 3 + 2]), vec3(0.2126f, 0.7152f, 0.0722f));
-		sum += logf(lum + 0.00001f);
-	}
-	prog.setUniform("AveLum", expf(sum / size));
-	pProg.use();
-	pProg.setUniform("AveLum", expf(sum / size));
-	prog.use();
 }
 
 void SceneBasic_Uniform::drawScene() {
@@ -498,8 +425,8 @@ void SceneBasic_Uniform::drawScene() {
 
 	prog.setUniform("flag", true);
 
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, flagTex);
+	//glActiveTexture(GL_TEXTURE2);
+	//glBindTexture(GL_TEXTURE_2D, flagTex);
 	
 	for (auto& flag : flags) {
 		flag->render(&prog, model, view, projection, cTime);

@@ -77,7 +77,7 @@ public:
 	void togglePaused() { paused = !paused; }
 
 private:
-	float speed = 0.025f;
+	float speed = 0.00025f;
 
 	bool paused = false;
 

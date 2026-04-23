@@ -4,12 +4,12 @@ in float Transp;
 in vec2 TexCoord;
 uniform sampler2D ParticleTex;
 
-layout (location = 1) out vec4 HDRColor;
+layout (location = 0) out vec4 FragColor;
 
 void main() {    
-    HDRColor = texture(ParticleTex, TexCoord);
+    FragColor = texture(ParticleTex, TexCoord);
 
     //Mix with black as it gets older to simulate smoke
-    //HDRColor = vec4(mix(vec3(0,0,0), HDRColor.xyz, Transp), HDRColor.a);
-    //HDRColor.a *= Transp;
+    //FragColor = vec4(mix(vec3(0,0,0), FragColor.xyz, Transp), FragColor.a);
+    //FragColor.a *= Transp;
 }

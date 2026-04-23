@@ -70,7 +70,6 @@ private:
 
     void setMatrices(glm::mat4 model, GLSLProgram* cProg);
 
-    void setUpFullScreenQuad();
     void setupFBO();
     void pass1();
     void pass2();

@@ -46,14 +46,16 @@ public:
     }
 
 	void updateRotation(GLSLProgram* prog) { // updates roation for firing then firest when horizontal
-		rotation -= 1.0f;
+		rotation -= 0.01f;
 		if (rotation <= 0.0f) {            
 			rotation = 90;
+			spawnArrow(prog);
+			spawnParticles(prog);
 		}
-		else if (rotation == 5.0f) { // delay to fire the arrow first to make it look more realistic
+		else if (rotation == 0.05f) { // delay to fire the arrow first to make it look more realistic
 			spawnArrow(prog);
 		}
-		else if (rotation == 2.0f) { // delay to spawn smoke to time it better
+		else if (rotation == 0.02f) { // delay to spawn smoke to time it better
 			spawnParticles(prog);
 		}
 	}
