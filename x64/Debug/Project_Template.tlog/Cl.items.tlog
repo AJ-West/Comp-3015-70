@@ -2,6 +2,13 @@ C:\Users\gamin\Documents\Final year uni\Comp-3015-70\glad.c;C:\Users\gamin\Docum
 C:\Users\gamin\Documents\Final year uni\Comp-3015-70\global.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\global.obj
 C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\glslprogram.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\glslprogram.obj
 C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\glutils.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\glutils.obj
+C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\imgui\backends\imgui_impl_glfw.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\imgui_impl_glfw.obj
+C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\imgui\backends\imgui_impl_opengl3.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\imgui_impl_opengl3.obj
+C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\imgui\imgui.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\imgui.obj
+C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\imgui\imgui_demo.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\imgui_demo.obj
+C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\imgui\imgui_draw.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\imgui_draw.obj
+C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\imgui\imgui_tables.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\imgui_tables.obj
+C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\imgui\imgui_widgets.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\imgui_widgets.obj
 C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\noisetex.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\noisetex.obj
 C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\objmesh.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\objmesh.obj
 C:\Users\gamin\Documents\Final year uni\Comp-3015-70\helper\plane.cpp;C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\plane.obj

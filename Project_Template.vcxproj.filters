@@ -28,6 +28,12 @@
     <Filter Include="media\texture">
       <UniqueIdentifier>{c4506d21-363f-482c-8036-674c5435bcea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="helper\imgui">
+      <UniqueIdentifier>{de61591a-5101-461d-9991-921d77584a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helper\imgui\backends">
+      <UniqueIdentifier>{d2ee93a4-de96-46c2-831b-c8cc381b610b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -74,6 +80,27 @@
     </ClCompile>
     <ClCompile Include="helper\plane.cpp">
       <Filter>helper</Filter>
+    </ClCompile>
+    <ClCompile Include="helper\imgui\imgui.cpp">
+      <Filter>helper\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="helper\imgui\imgui_demo.cpp">
+      <Filter>helper\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="helper\imgui\imgui_draw.cpp">
+      <Filter>helper\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="helper\imgui\imgui_tables.cpp">
+      <Filter>helper\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="helper\imgui\imgui_widgets.cpp">
+      <Filter>helper\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="helper\imgui\backends\imgui_impl_glfw.cpp">
+      <Filter>helper\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="helper\imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>helper\imgui\backends</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +192,33 @@
     </ClInclude>
     <ClInclude Include="flag.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\imgui\imconfig.h">
+      <Filter>helper\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\imgui\imgui.h">
+      <Filter>helper\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\imgui\imgui_internal.h">
+      <Filter>helper\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\imgui\imstb_rectpack.h">
+      <Filter>helper\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\imgui\imstb_textedit.h">
+      <Filter>helper\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\imgui\imstb_truetype.h">
+      <Filter>helper\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\imgui\backends\imgui_impl_glfw.h">
+      <Filter>helper\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\imgui\backends\imgui_impl_opengl3.h">
+      <Filter>helper\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="helper\imgui\backends\imgui_impl_opengl3_loader.h">
+      <Filter>helper\imgui\backends</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

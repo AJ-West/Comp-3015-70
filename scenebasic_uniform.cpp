@@ -22,6 +22,11 @@ using std::endl;
 #include "global.h"
 #include "crossbow.h"
 
+//ImGUI
+#include "helper/imgui/imgui.h"
+#include "helper/imgui/backends/imgui_impl_glfw.h"
+#include "helper/imgui/backends/imgui_impl_opengl3.h"
+
 using glm::vec3;
 
 using glm::mat4;
@@ -34,6 +39,8 @@ particleLifetime(1.5f), emitterPos(1, 0, 0), emitterDir(0, 2, 0) {
 
 void SceneBasic_Uniform::initScene()
 {
+	startTime = time(nullptr); // get time at start
+
 	std::srand(time(0));
 
     compile();
@@ -389,6 +396,32 @@ void SceneBasic_Uniform::pass2() {
 	glDrawArrays(GL_TRIANGLES, 0,6);
 
 	prog.use();
+
+	time_t currentTime = time(nullptr); // gets current time
+	div_t timeElapsed = std::div(static_cast<int>(currentTime - startTime), 60); // get time elapsed in minutes
+	string mins = std::to_string(timeElapsed.quot);
+	string secs = std::to_string(timeElapsed.rem);
+	if (timeElapsed.quot < 10) {
+		mins = "0" + std::to_string(timeElapsed.quot);
+	}
+	if (timeElapsed.rem < 10) {
+		secs = "0" + std::to_string(timeElapsed.rem);
+	}
+
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Appearing);
+	ImGui::SetNextWindowSize(ImVec2(0, 100), ImGuiCond_Appearing);
+	// Create ImGui window
+	ImGui::Begin("Transparent Window", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar);
+	ImGui::Text("Time survived: %s:%s", mins.c_str(), secs.c_str());
+	ImGui::SetNextWindowPos(ImVec2(800 - 60, 0), ImGuiCond_Appearing);
+	ImGui::Text("AJ West");
+	ImGui::End();
+
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void SceneBasic_Uniform::computeLogAveLuminance() {

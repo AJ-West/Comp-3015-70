@@ -64,6 +64,8 @@ private:
     float tPrev;
     float angle;
 
+    time_t startTime;
+
     void setProgDefaults(GLSLProgram* cProg);
 
     void compile();

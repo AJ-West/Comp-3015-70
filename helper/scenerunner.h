@@ -13,6 +13,11 @@
 
 #include "global.h"
 
+//ImGUI
+#include "helper/imgui/imgui.h"
+#include "helper/imgui/backends/imgui_impl_glfw.h"
+#include "helper/imgui/backends/imgui_impl_opengl3.h"
+
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) // from 3016 project
 {
     //Initially no last positions, so sets last positions to current positions
@@ -127,6 +132,8 @@ public:
         //Sets the mouse_callback() function as the callback for the mouse movement event
         glfwSetCursorPosCallback(window, mouse_callback);
 
+        init_ImGui_environment(window);
+
         // Enter the main loop
         mainLoop(window, scene);
 
@@ -158,6 +165,24 @@ public:
         }
 
         return recipeName;
+    }
+
+    //creates ImGui
+    ImGuiIO& init_ImGui_environment(GLFWwindow* window) {
+        // Initialize ImGui context
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+
+        // Setup ImGui style
+        ImGui::StyleColorsDark();
+
+        // Initialize ImGui for GLFW and OpenGL
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplOpenGL3_Init();
+
+        return io;
     }
 
 private:
