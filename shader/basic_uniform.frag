@@ -214,7 +214,7 @@ void flags(){
         HDRColor.rgb += blinnPhong(i, Position.xyz, crntNormFrag);
     }
     
-    HDRColor.rgb *= texture(Tex1, TexCoord).rgb;
+    HDRColor.rgb += texture(Tex1, TexCoord).rgb;
     HDRColor.a = 1.0;
 }
 
@@ -234,7 +234,8 @@ void pass1(){
             HDRColor.rgb += blingPhongModelNormal(i, position.xyz, norm, objectLocal);
         }
 
-        HDRColor.rgb *= texColor;
+        HDRColor.rgb += texColor;     
+
         if(abs(position.z) > Fog.MinDist)
         HDRColor.rgb = mix(Fog.Colour, HDRColor.rgb, fogFactor);
         HDRColor.a = 1.0;

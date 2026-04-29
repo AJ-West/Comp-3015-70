@@ -101,7 +101,7 @@ void SceneBasic_Uniform::initScene()
 
 	// loads required models
 	arrow = ObjMesh::load("media/models/arrow.obj", false, true);
-	crossbow = ObjMesh::load("media/models/crossbow.obj", false, true);
+	crossbow = ObjMesh::load("media/models/crossbow.obj", false, false);
 
 	//sets up skybox
 	skyModel = mat4(1.0f);
@@ -218,7 +218,7 @@ void SceneBasic_Uniform::setProgDefaults(GLSLProgram* cProg) {
 	//position and colour of stationary main light
 	cProg->setUniform("Lights[0].Position", vec4(2.5f, 1.0f, 2.5f, 1.0f));
 	cProg->setUniform("Lights[0].Ld", vec3(1.0f, 1.0f, 1.0f));
-	cProg->setUniform("Lights[0].La", vec3(0.2f, 0.2f, 0.2f));
+	cProg->setUniform("Lights[0].La", vec3(0.05f, 0.05f, 0.05f));
 	cProg->setUniform("Lights[0].Ls", vec3(1.0f, 1.0f, 1.0f));
 
 	//colours of moving lights
@@ -485,7 +485,7 @@ void SceneBasic_Uniform::drawScene() {
 			if (allArrows[i].inUse) {
 				model1 = mat4(1.0f);
 				model1 = translate(model1, allArrows[i].pos);
-				model1 = rotate(model1, radians(allArrows[i].rotation * allArrows[i].direction), vec3(0.0f, 1.0f, 0.0f));
+				model1 = rotate(model1, radians(allArrows[i].rotation * allArrows[i].direction + allArrows[i].dirOffset), vec3(0.0f, 1.0f, 0.0f));
 				model1 = scale(model1, vec3(0.01f, 0.01f, 0.01f));
 				setMatrices(model1, &prog);
 				prog.setUniform("Model", model1);
@@ -512,8 +512,8 @@ void SceneBasic_Uniform::drawScene() {
 			prog.use();
 			model2 = mat4(1.0f);
 			model2 = translate(model2, crossbows[i]->getPos());
-			model2 = rotate(model2, radians(90.0f * (crossbows[i]->getDir() + 1)), vec3(0.0f, 1.0f, 0.0f));
-			model2 = glm::rotate(model2, glm::radians(crossbows[i]->getRotation()), vec3(1.0f, 0.0f, 0.0f));
+			model2 = rotate(model2, radians(90.0f * (crossbows[i]->getDir() + 1) + crossbows[i]->getDirRotation()), vec3(0.0f, 1.0f, 0.0f));
+			model2 = glm::rotate(model2, glm::radians(crossbows[i]->getYRotation()), vec3(1.0f, 0.0f, 0.0f));
 			model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
 			setMatrices(model2, &prog);
 			prog.setUniform("Model", model2);

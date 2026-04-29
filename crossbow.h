@@ -4,7 +4,9 @@
 class crossBow {
 private:
 	vec3 pos;
-	float rotation = 90.0f;
+	float yRotation = 90.0f;
+	float dirRotation = 0.0f;
+	bool dirInc = true;
 
 	int dir;
 
@@ -36,7 +38,9 @@ private:
 
 public:
 	crossBow(vec3 position, int direction, GLSLProgram* prog) :pos(position), dir(direction) {
-		rotation = rand() % 91;
+		yRotation = rand() % 91;
+		dirRotation = rand() % 40 - 20;
+		dirInc = rand() % 2;
 	}
 
     void update(float t, GLSLProgram* prog) {
@@ -46,22 +50,34 @@ public:
     }
 
 	void updateRotation(GLSLProgram* prog) { // updates roation for firing then firest when horizontal
-		rotation -= 1.0f;
-		if (rotation <= 0.0f) {            
-			rotation = 90;
+		yRotation -= 1.0f;
+		if (yRotation <= 0.0f) {
+			yRotation = 90;
 		}
-		else if (rotation == 5.0f) { // delay to fire the arrow first to make it look more realistic
+		else if (yRotation == 5.0f) { // delay to fire the arrow first to make it look more realistic
 			spawnArrow(prog);
 		}
-		else if (rotation == 2.0f) { // delay to spawn smoke to time it better
+		else if (yRotation == 2.0f) { // delay to spawn smoke to time it better
 			spawnParticles(prog);
+		}
+		if(dirInc) {
+			dirRotation += 0.5f;
+			if (dirRotation >= 20.0f) {
+				dirInc = false;
+			}
+		}
+		else {
+			dirRotation -= 0.5f;
+			if (dirRotation <= -20.0f) {
+				dirInc = true;
+			}
 		}
 	}
 
 	void spawnArrow(GLSLProgram* prog) { // sets next availabe arrow to active at the right position		        
 		for (int i = 0; i < maxArrows; i++) {
 			if (!allArrows[i].inUse) {
-				allArrows[i].init(pos, dir);
+				allArrows[i].init(pos, dir, dirRotation);
 				break;
 			}
 		}
@@ -86,6 +102,7 @@ public:
     }
 
 	vec3 getPos() { return pos; }
-	float getRotation() { return rotation; }
+	float getYRotation() { return yRotation; }
+	float getDirRotation() { return dirRotation; }
 	int getDir() { return dir; }
 };

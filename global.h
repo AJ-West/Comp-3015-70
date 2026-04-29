@@ -30,7 +30,9 @@ extern const int maxArrows;
 
 struct Arrows {
 	vec3 pos = vec3(0.0f, 0.0f, 0.0f);
+
 	float rotation = 90.0f;
+	float dirOffset = 0.0f;
 
 	int direction = 0;
 
@@ -42,29 +44,19 @@ struct Arrows {
 
 	bool getInUse() { return inUse; }
 
-	void init(vec3 position, int dir) { // sets arrow to right position and as active when required
+	//radians(allArrows[i].rotation* allArrows[i].direction + allArrows[i].dirOffset)
+
+	void init(vec3 position, int dir, float offset) { // sets arrow to right position and as active when required
 		pos = position;
 		direction = dir;
+		dirOffset = offset; // used to account for direction of crossbow when fired
 		inUse = true;
 		lifeTime = 60;
 	}
 
 	void update() { // move arrows
-		switch (direction)
-		{
-		case(0):
-			pos.x += speed;
-			break;
-		case(1):
-			pos.z -= speed;
-			break;
-		case(2):
-			pos.x -= speed;
-			break;
-		case(3):
-			pos.z += speed;
-			break;
-		}
+		pos.x += speed * cos(glm::radians(rotation * direction + dirOffset));
+		pos.z -= speed * sin(glm::radians(rotation * direction + dirOffset));
 		lifeTime -= 1;
 		if (lifeTime == 0) { // if reached the end of its lifetime then despawn arrow by setting it to inactive
 			inUse = false;

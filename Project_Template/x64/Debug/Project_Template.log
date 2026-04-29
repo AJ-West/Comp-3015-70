@@ -1,4 +1,126 @@
-﻿  scenebasic_uniform.cpp
+﻿  global.cpp
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(34,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'global.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(34,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'global.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(35,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'global.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(35,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'global.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(36,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'global.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(36,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'global.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(45,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(45,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(45,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(45,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(45,18): warning C4244:         ]
+  (compiling source file 'global.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(48,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(48,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(48,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(48,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(48,18): warning C4244:         ]
+  (compiling source file 'global.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(53,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(53,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(53,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(53,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(53,18): warning C4244:         ]
+  (compiling source file 'global.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(56,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(56,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(56,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(56,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(56,18): warning C4244:         ]
+  (compiling source file 'global.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(61,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(61,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(61,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(61,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(61,18): warning C4244:         ]
+  (compiling source file 'global.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244:         ]
+  (compiling source file 'global.cpp')
+  
+  main.cpp
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(34,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(34,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(35,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(35,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(36,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(36,13): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(45,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(45,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(45,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(45,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(45,18): warning C4244:         ]
+  (compiling source file 'main.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(48,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(48,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(48,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(48,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(48,18): warning C4244:         ]
+  (compiling source file 'main.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(53,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(53,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(53,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(53,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(53,18): warning C4244:         ]
+  (compiling source file 'main.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(56,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(56,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(56,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(56,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(56,18): warning C4244:         ]
+  (compiling source file 'main.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(61,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(61,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(61,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(61,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(61,18): warning C4244:         ]
+  (compiling source file 'main.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244:         with
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244:         [
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244:             T=float
+C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244:         ]
+  (compiling source file 'main.cpp')
+  
+  scenebasic_uniform.cpp
 C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(34,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'scenebasic_uniform.cpp')
   
@@ -59,8 +181,15 @@ C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244:         
 C:\Users\ajwest2\Documents\Comp-3015-70\camera.h(64,18): warning C4244:         ]
   (compiling source file 'scenebasic_uniform.cpp')
   
-C:\Users\ajwest2\Documents\Comp-3015-70\crossbow.h(39,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\crossbow.h(41,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'scenebasic_uniform.cpp')
   
-C:\Users\ajwest2\Documents\Comp-3015-70\scenebasic_uniform.cpp(37,17): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\crossbow.h(42,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'scenebasic_uniform.cpp')
+  
+C:\Users\ajwest2\Documents\Comp-3015-70\scenebasic_uniform.cpp(44,17): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\scenebasic_uniform.cpp(637,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ajwest2\Documents\Comp-3015-70\scenebasic_uniform.cpp(656,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Project_Template.vcxproj -> C:\Users\ajwest2\Documents\Comp-3015-70\x64\Debug\Project_Template.exe
