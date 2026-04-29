@@ -53,7 +53,6 @@ void update(){
         Position = Emitter;
         Velocity = randomInitialVelocity();
         if(VertexAge < 0) Age = VertexAge + DeltaT;
-        //else Age = (VertexAge - ParticleLifetime) + DeltaT;
     }
     else{
         // Particle is alive, update
@@ -67,7 +66,6 @@ void render(){
     Transp = 0.0;
     vec3 posCam = vec3(0.0);
     if(VertexAge >= 0.0 && VertexAge <= ParticleLifetime){
-        //posCam = (MV * vec4(VertexPosition,1)).xyz + (offsets[gl_VertexID] - camPos) * ParticleSize;
         posCam = (MV * vec4(VertexPosition,1)).xyz + (offsets[gl_VertexID]) * ParticleSize;
         Transp = clamp(1.0 - VertexAge / ParticleLifetime, 0, 1);
     }

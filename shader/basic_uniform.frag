@@ -4,7 +4,6 @@
 
 //current position from last stage
 in vec3 crntPosFrag;
-in vec4 Position;
 //current normal from last stage
 in vec3 crntNormFrag;
 // tex coord from last stage
@@ -73,17 +72,6 @@ uniform mat4 ModelViewMatrix;
 uniform mat3 NormalMatrix;
 uniform vec3 camPos;
 
-// for toon shading
-const int levels = 10;
-const float scaleFactor = 1.0/levels;
-
-//get position and normal to camera space
-void getCamSpaceValues(out vec3 normal, out vec4 position){
-    normal = normalize(NormalMatrix * crntNormFrag);
-
-    position = ModelViewMatrix * vec4(crntPosFrag, 1.0);
-}
-
 vec3 blinnPhong(int light, vec3 position, vec3 n){
     //Ambient
     vec3 ambient = Lights[light].La*Material.Ka;
@@ -111,8 +99,7 @@ vec3 blingPhongModelNormal(int light, vec3 position, vec3 normal, mat3 objectLoc
     vec3 viewDir = normalize(camPos - position);
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float sDotn = max(dot(halfwayDir, normal), 0.0);
-    vec3 diffuse = Lights[light].Ld*floor(sDotn*levels)*scaleFactor;
-    //vec3 diffuse = Lights[light].Ld*sDotn;
+    vec3 diffuse = Lights[light].Ld*sDotn;
 
     vec3 specular = vec3(0.0);
     if (sDotn>0.0){
@@ -174,8 +161,6 @@ vec3 mixTexture(){
 }
 
 uniform sampler2D NoiseTex;
-
-uniform vec4 skyColor = vec4(0.2, 0.2, 0.9, 0.0);
 uniform vec4 CloudColor = vec4(1.0, 1.0, 1.0, 1.0);
 uniform vec2 offset;
 
@@ -211,7 +196,7 @@ void clouds(){
 uniform bool flag;
 void flags(){
     for (int i=0; i<3; i++){
-        HDRColor.rgb += blinnPhong(i, Position.xyz, crntNormFrag);
+        HDRColor.rgb += blinnPhong(i, crntPosFrag, crntNormFrag);
     }
     
     HDRColor.rgb += texture(Tex1, TexCoord).rgb;
@@ -266,9 +251,6 @@ void pass2(){
     //Convert back to RGB and send outpput to buffer
     if(DoToneMap){
         Colour = xyz2rgb * xyzCol;
-        //Colour.x = floor(Colour.x * levels)*scaleFactor;
-        //Colour.y = floor(Colour.y * levels)*scaleFactor;
-        //Colour.z = floor(Colour.z * levels)*scaleFactor;
     }
     FragColor = vec4(Colour, 1.0);    
 }
