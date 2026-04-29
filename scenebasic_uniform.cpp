@@ -265,6 +265,7 @@ void SceneBasic_Uniform::startGame() {
 	if (homeScreen) {
 		homeScreen = false;
 		camera->setCameraPosition(GameStartPos);
+		camera->togglePaused();
 	}
 }
 
@@ -623,13 +624,18 @@ void SceneBasic_Uniform::renderUI() {
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Appearing);
-	ImGui::SetNextWindowSize(ImVec2(0, 100), ImGuiCond_Appearing);
+	ImGui::SetNextWindowSize(ImVec2(WIN_WIDTH, WIN_HEIGHT), ImGuiCond_Appearing); // set ui window to size of game window
 
 	// Create ImGui window
 	ImGui::Begin("Transparent Window", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar);
 
 	if (homeScreen) {
-		ImGui::Text("Press enter to start the game.");
+		const char* text = "Press enter to start the game";
+		ImGui::SetWindowFontScale(2.0f);
+		ImVec2 textDimen = ImGui::CalcTextSize(text);
+		ImGui::SetCursorPosX((WIN_WIDTH - textDimen.x) / 2);
+		ImGui::SetCursorPosY(WIN_HEIGHT - textDimen.y*2.5);
+		ImGui::Text(text);
 	}
 	else {
 		time_t currentTime = time(nullptr); // gets current time
@@ -643,7 +649,12 @@ void SceneBasic_Uniform::renderUI() {
 			secs = "0" + std::to_string(timeElapsed.rem);
 		}
 		
-		ImGui::Text("Time survived: %s:%s", mins.c_str(), secs.c_str());
+		string text = "Time survived: " + mins + ":" + secs;
+		ImGui::SetWindowFontScale(2.0f);
+		ImVec2 textDimen = ImGui::CalcTextSize(text.c_str());
+		ImGui::SetCursorPosX((WIN_WIDTH - textDimen.x) / 2);
+		ImGui::SetCursorPosY(WIN_HEIGHT - textDimen.y * 2.5);
+		ImGui::Text(text.c_str());
 	}
 	ImGui::End();
 
