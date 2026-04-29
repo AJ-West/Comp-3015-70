@@ -171,6 +171,8 @@ void SceneBasic_Uniform::initScene()
 	flags.emplace_back(new Flag(vec3(4.0, 1.0, 2.0), vec3(90.0, 90.0, 0.0)));
 	flags.emplace_back(new Flag(vec3(2.0, 1.0, 4.0), vec3(90.0, 180.0, 0.0)));
 	flags.emplace_back(new Flag(vec3(0.0, 1.0, 2.0), vec3(90.0, 270.0, 0.0)));
+
+	camera->setCameraPosition(homeScreenPos);
 }
 
 void SceneBasic_Uniform::setUpFullScreenQuad() {
@@ -259,8 +261,19 @@ void SceneBasic_Uniform::compile()
 	}
 }
 
+void SceneBasic_Uniform::startGame() {
+	if (homeScreen) {
+		homeScreen = false;
+		camera->setCameraPosition(GameStartPos);
+	}
+}
+
 void SceneBasic_Uniform::update( float t )
 {
+	if (homeScreen) {
+		camera->setCameraFront(homeScreenFront);
+	}
+
 	// update view for current camera position
 	view = lookAt(camera->getPosition(), camera->getPosition() + camera->getFront(), camera->getCameraUp());
 
@@ -310,8 +323,10 @@ void SceneBasic_Uniform::update( float t )
 }
 
 void SceneBasic_Uniform::updateCamera(int direction) {
-	if (direction == paused) { camera->togglePaused(); } // if p is pressed
-	camera->updatePosition(direction);
+	if (!homeScreen) {
+		if (direction == paused) { camera->togglePaused(); } // if p is pressed
+		camera->updatePosition(direction);
+	}
 }
 
 void SceneBasic_Uniform::render()
@@ -397,31 +412,7 @@ void SceneBasic_Uniform::pass2() {
 
 	prog.use();
 
-	time_t currentTime = time(nullptr); // gets current time
-	div_t timeElapsed = std::div(static_cast<int>(currentTime - startTime), 60); // get time elapsed in minutes
-	string mins = std::to_string(timeElapsed.quot);
-	string secs = std::to_string(timeElapsed.rem);
-	if (timeElapsed.quot < 10) {
-		mins = "0" + std::to_string(timeElapsed.quot);
-	}
-	if (timeElapsed.rem < 10) {
-		secs = "0" + std::to_string(timeElapsed.rem);
-	}
-
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Appearing);
-	ImGui::SetNextWindowSize(ImVec2(0, 100), ImGuiCond_Appearing);
-	// Create ImGui window
-	ImGui::Begin("Transparent Window", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar);
-	ImGui::Text("Time survived: %s:%s", mins.c_str(), secs.c_str());
-	ImGui::SetNextWindowPos(ImVec2(800 - 60, 0), ImGuiCond_Appearing);
-	ImGui::Text("AJ West");
-	ImGui::End();
-
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	renderUI();
 }
 
 void SceneBasic_Uniform::computeLogAveLuminance() {
@@ -470,64 +461,67 @@ void SceneBasic_Uniform::drawScene() {
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	prog.setUniform("isClouds", false);
 
-	//updates position of the moving lights
-	float x, z;
-	for (int i = 1; i < 3; i++) {
-		std::stringstream name;
-		name << "Lights[" << i << "].Position";
-		x = 5.0f * cosf((glm::two_pi<float>() / 3) * i);
-		z = 5.0f * sinf((glm::two_pi<float>() / 3) * i);
-		prog.setUniform(name.str().c_str(), view * glm::vec4(x * cos(angle), 1.2f, (z + 1.0f) * sin(angle), 1.0f));
-	}
+	if (!homeScreen) {
 
-	prog.setUniform("numOfTex", 1);
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, woodTex);
-
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, woodNormal);
-	//render each arrow
-	for (int i = 0; i < maxArrows; i++) {
-		if (allArrows[i].inUse) {
-			model1 = mat4(1.0f);			
-			model1 = translate(model1, allArrows[i].pos);
-			model1 = rotate(model1, radians(allArrows[i].rotation * allArrows[i].direction), vec3(0.0f, 1.0f, 0.0f));
-			model1 = scale(model1, vec3(0.01f, 0.01f, 0.01f));
-			setMatrices(model1, &prog);
-			prog.setUniform("Model", model1);
-			
-			arrow->render();
+		//updates position of the moving lights
+		float x, z;
+		for (int i = 1; i < 3; i++) {
+			std::stringstream name;
+			name << "Lights[" << i << "].Position";
+			x = 5.0f * cosf((glm::two_pi<float>() / 3) * i);
+			z = 5.0f * sinf((glm::two_pi<float>() / 3) * i);
+			prog.setUniform(name.str().c_str(), view * glm::vec4(x * cos(angle), 1.2f, (z + 1.0f) * sin(angle), 1.0f));
 		}
+
+		prog.setUniform("numOfTex", 1);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, woodTex);
+
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, woodNormal);
+		//render each arrow
+		for (int i = 0; i < maxArrows; i++) {
+			if (allArrows[i].inUse) {
+				model1 = mat4(1.0f);
+				model1 = translate(model1, allArrows[i].pos);
+				model1 = rotate(model1, radians(allArrows[i].rotation * allArrows[i].direction), vec3(0.0f, 1.0f, 0.0f));
+				model1 = scale(model1, vec3(0.01f, 0.01f, 0.01f));
+				setMatrices(model1, &prog);
+				prog.setUniform("Model", model1);
+
+				arrow->render();
+			}
+		}
+		model1 = mat4(1.0f);
+
+		prog.setUniform("numOfTex", 2);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, metalTex);
+
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, metalNormal);
+
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, rustTex);
+
+		glActiveTexture(GL_TEXTURE5);
+		glBindTexture(GL_TEXTURE_2D, rustNormal);
+		//render each crossbow
+		for (int i = 0; i < 16; i++) {
+			prog.use();
+			model2 = mat4(1.0f);
+			model2 = translate(model2, crossbows[i]->getPos());
+			model2 = rotate(model2, radians(90.0f * (crossbows[i]->getDir() + 1)), vec3(0.0f, 1.0f, 0.0f));
+			model2 = glm::rotate(model2, glm::radians(crossbows[i]->getRotation()), vec3(1.0f, 0.0f, 0.0f));
+			model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
+			setMatrices(model2, &prog);
+			prog.setUniform("Model", model2);
+			crossbow->render();
+		}
+		model2 = mat4(1.0f);
+
+		renderParticles();
 	}
-	model1 = mat4(1.0f);
-
-	prog.setUniform("numOfTex", 2);
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, metalTex);
-
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_2D, metalNormal);
-
-	glActiveTexture(GL_TEXTURE4);
-	glBindTexture(GL_TEXTURE_2D, rustTex);
-
-	glActiveTexture(GL_TEXTURE5);
-	glBindTexture(GL_TEXTURE_2D, rustNormal);
-	//render each crossbow
-	for (int i = 0; i < 16; i++) {
-		prog.use();
-		model2 = mat4(1.0f);		
-		model2 = translate(model2, crossbows[i]->getPos());
-		model2 = rotate(model2, radians(90.0f * (crossbows[i]->getDir()+1)), vec3(0.0f, 1.0f, 0.0f));
-		model2 = glm::rotate(model2, glm::radians(crossbows[i]->getRotation()), vec3(1.0f, 0.0f, 0.0f));
-		model2 = scale(model2, vec3(0.025f, 0.025f, 0.025f));
-		setMatrices(model2, &prog);
-		prog.setUniform("Model", model2);		
-		crossbow->render();
-	}
-	model2 = mat4(1.0f);
-
-	renderParticles();
 
 	prog.setUniform("flag", true);
 
@@ -622,4 +616,37 @@ void SceneBasic_Uniform::createCloudQuad() {
 
 	glm::vec2 offset = glm::vec2(1.0f);
 	prog.setUniform("offset", offset);
+}
+
+void SceneBasic_Uniform::renderUI() {
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplGlfw_NewFrame();
+	ImGui::NewFrame();
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Appearing);
+	ImGui::SetNextWindowSize(ImVec2(0, 100), ImGuiCond_Appearing);
+
+	// Create ImGui window
+	ImGui::Begin("Transparent Window", NULL, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar);
+
+	if (homeScreen) {
+		ImGui::Text("Press enter to start the game.");
+	}
+	else {
+		time_t currentTime = time(nullptr); // gets current time
+		div_t timeElapsed = std::div(static_cast<int>(currentTime - startTime), 60); // get time elapsed in minutes
+		string mins = std::to_string(timeElapsed.quot);
+		string secs = std::to_string(timeElapsed.rem);
+		if (timeElapsed.quot < 10) {
+			mins = "0" + std::to_string(timeElapsed.quot);
+		}
+		if (timeElapsed.rem < 10) {
+			secs = "0" + std::to_string(timeElapsed.rem);
+		}
+		
+		ImGui::Text("Time survived: %s:%s", mins.c_str(), secs.c_str());
+	}
+	ImGui::End();
+
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

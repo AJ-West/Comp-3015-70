@@ -221,5 +221,7 @@ private:
             scene.updateCamera(right);
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
             scene.updateCamera(paused);
+        if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+            scene.startGame();
     }
 };

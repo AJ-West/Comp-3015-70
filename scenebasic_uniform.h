@@ -66,6 +66,11 @@ private:
 
     time_t startTime;
 
+    bool homeScreen = true;
+    vec3 homeScreenPos = vec3(2.0f, 0.9f, 1.5f);
+    vec3 homeScreenFront = vec3(0.0f, 0.0f, -1.0f);
+    vec3 GameStartPos = vec3(2.0f, 0.0f, 2.5f);
+
     void setProgDefaults(GLSLProgram* cProg);
 
     void compile();
@@ -82,6 +87,10 @@ private:
 
     void initBuffers();
     void renderParticles();
+
+    void startGame();
+
+    void renderUI();
 
 public:
     SceneBasic_Uniform();

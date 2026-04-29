@@ -73,16 +73,17 @@ public:
 	bool getPaused() { return paused; }
 
 	void setCameraFront(vec3 newFront) { front = newFront; }
+	void setCameraPosition(vec3 newPos) { position = newPos; }
 
 	void togglePaused() { paused = !paused; }
 
 private:
 	float speed = 0.025f;
 
-	bool paused = false;
+	bool paused = true;
 
-	//Relative position within world space
-	vec3 position = vec3(2.5f, 0.0f, 2.5f);
+	//Relative position within world space (start pos)
+	vec3 position = vec3(2.0f, 0.0f, 2.5f);
 	//The direction of travel
 	vec3 front = vec3(0.0f, 0.0f, -1.0f);
 	//Up position within world space
