@@ -89,6 +89,7 @@ private:
     void renderParticles();
 
     void startGame();
+    void endGame();
 
     void renderUI();
 

@@ -266,7 +266,15 @@ void SceneBasic_Uniform::startGame() {
 		homeScreen = false;
 		camera->setCameraPosition(GameStartPos);
 		camera->togglePaused();
+		startTime = time(nullptr); // get time at start
 	}
+}
+
+void SceneBasic_Uniform::endGame() {
+	homeScreen = true;
+	camera->setCameraPosition(homeScreenPos);
+	camera->togglePaused();
+
 }
 
 void SceneBasic_Uniform::update( float t )
@@ -305,7 +313,7 @@ void SceneBasic_Uniform::update( float t )
 
 				float dist = sqrt(xDist * xDist + zDist * zDist);
 				if (dist < 0.035f) {
-					exit(EXIT_SUCCESS);
+					endGame();
 				}
 
 			}

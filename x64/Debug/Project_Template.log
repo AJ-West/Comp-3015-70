@@ -59,10 +59,13 @@ C:\Users\gamin\Documents\Final year uni\Comp-3015-70\camera.h(64,18): warning C4
 C:\Users\gamin\Documents\Final year uni\Comp-3015-70\camera.h(64,18): warning C4244:         ]
   (compiling source file 'scenebasic_uniform.cpp')
   
-C:\Users\gamin\Documents\Final year uni\Comp-3015-70\crossbow.h(39,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-70\crossbow.h(41,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'scenebasic_uniform.cpp')
+  
+C:\Users\gamin\Documents\Final year uni\Comp-3015-70\crossbow.h(42,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'scenebasic_uniform.cpp')
   
 C:\Users\gamin\Documents\Final year uni\Comp-3015-70\scenebasic_uniform.cpp(44,17): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-70\scenebasic_uniform.cpp(637,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\gamin\Documents\Final year uni\Comp-3015-70\scenebasic_uniform.cpp(656,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-70\scenebasic_uniform.cpp(645,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\gamin\Documents\Final year uni\Comp-3015-70\scenebasic_uniform.cpp(664,35): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   Project_Template.vcxproj -> C:\Users\gamin\Documents\Final year uni\Comp-3015-70\x64\Debug\Project_Template.exe
