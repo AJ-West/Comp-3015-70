@@ -102,8 +102,8 @@ The idea for the game originally was a parkore course. The idea was to include s
 
 ## What was started with
 The 30% coursework can be found here to see what the base scene was compared to the current scene.
-Github:
-Video:
+Github: https://github.com/AJ-West/Comp-3015-30-
+Video: https://www.youtube.com/watch?v=f5KkX3ISI_E
 
 ## What makes it unique
 What makes the project unique is how the components are put together. The game loop is not particularly original. The cloud effect uses the skybox texture to blend in better making it more difficult to see the outline of the quad used to display it. Changes made from the 30% (excluding the new features) includes reworking the skybox shader to be in the main shader, fix issues with not rendering the project on nvidia GPUs with regards to HDR (HDR is still used), added a home screen, added a timer and best score, added music and sound effects using Irrklang. The only sound effect is a death sound effect. A sound effect for crossbow fire was tested but crossbows are fired so frequently is became annoying and made the game worse. 
