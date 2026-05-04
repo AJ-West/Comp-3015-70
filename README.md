@@ -2,6 +2,8 @@
 
 To compile the project it should just compile assuming you have opengl and gald.c set up as suggested in the brief. However in testing sometimes I had to add glad.c again even though the file path hadn't changed but I am not sure why. If there is an issue with glad.c remove the current one from the project then add it back to the same place and it should work. I have this issue when first using the project template before changing anything and this was my fix.
 
+Music was found here: https://yujiboy.itch.io/game-musics
+
 ## Project info
 
 ### To run (this section is only on github not readme in submission as this was added just in case after my submission but before submission deadline)
@@ -11,7 +13,7 @@ To run the executable go into the executable folder in the extracted zip folder.
 [https://github.com/AJ-West/Comp-3015-30-](https://github.com/AJ-West/Comp-3015-70)
 
 ### Video:
-
+https://youtu.be/U7mK5y97EZo
 
 ### Visual studio version: 
 Microsoft Visual Studio Community 2022 (64-bit) - Current
