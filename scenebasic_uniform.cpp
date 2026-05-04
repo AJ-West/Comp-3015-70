@@ -274,7 +274,8 @@ void SceneBasic_Uniform::endGame() {
 	homeScreen = true;
 	camera->setCameraPosition(homeScreenPos);
 	camera->togglePaused();
-
+	time_t survivalTime = time(nullptr) - startTime;
+	if (survivalTime > recordTime) { recordTime = survivalTime; }
 }
 
 void SceneBasic_Uniform::update( float t )
@@ -644,6 +645,21 @@ void SceneBasic_Uniform::renderUI() {
 		ImGui::SetCursorPosX((WIN_WIDTH - textDimen.x) / 2);
 		ImGui::SetCursorPosY(WIN_HEIGHT - textDimen.y*2.5);
 		ImGui::Text(text);
+		div_t timeElapsed = std::div(static_cast<int>(recordTime), 60); // get time elapsed in minutes
+		string mins = std::to_string(timeElapsed.quot);
+		string secs = std::to_string(timeElapsed.rem);
+		if (timeElapsed.quot < 10) {
+			mins = "0" + std::to_string(timeElapsed.quot);
+		}
+		if (timeElapsed.rem < 10) {
+			secs = "0" + std::to_string(timeElapsed.rem);
+		}
+
+		string tText = "Record time: " + mins + ":" + secs;
+		textDimen = ImGui::CalcTextSize(tText.c_str());
+		ImGui::SetCursorPosX((WIN_WIDTH - textDimen.x) / 2);
+		ImGui::SetCursorPosY(WIN_HEIGHT - textDimen.y * 1.5);
+		ImGui::Text(tText.c_str());
 	}
 	else {
 		time_t currentTime = time(nullptr); // gets current time

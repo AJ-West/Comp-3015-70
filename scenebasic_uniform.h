@@ -64,6 +64,8 @@ private:
     float tPrev;
     float angle;
 
+    time_t recordTime = 0;
+
     time_t startTime;
 
     bool homeScreen = true;
