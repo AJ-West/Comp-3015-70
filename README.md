@@ -10,7 +10,7 @@ Music was found here: https://yujiboy.itch.io/game-musics
 To run the executable go into the executable folder in the extracted zip folder. Then in the debug folder is "Project_Template.exe." double click on this to run the program. Pause to explore the scene with "p" else avoid the arrows as getting hit closes the program.
 
 ### Github:
-[https://github.com/AJ-West/Comp-3015-30-](https://github.com/AJ-West/Comp-3015-70)
+https://github.com/AJ-West/Comp-3015-70
 
 ### Video:
 https://youtu.be/U7mK5y97EZo
