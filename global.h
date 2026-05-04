@@ -7,6 +7,8 @@
 
 #include "media/texture/texture.h"
 
+#include "irrklang/irrKlang.h"
+
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 600
 
@@ -23,7 +25,6 @@ extern bool mouseFirstEntry;
 //Positions of camera from given last frame
 extern float cameraLastXPos;
 extern float cameraLastYPos;
-
 
 //Used for object pooling arrows
 extern const int maxArrows;

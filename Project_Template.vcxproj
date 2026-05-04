@@ -124,7 +124,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies); irrKlang.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -141,7 +141,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies); irrKlang.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -205,6 +205,27 @@
     <ClInclude Include="helper\torus.h" />
     <ClInclude Include="helper\trianglemesh.h" />
     <ClInclude Include="helper\utils.h" />
+    <ClInclude Include="irrklang\ik_ESoundEngineOptions.h" />
+    <ClInclude Include="irrklang\ik_ESoundOutputDrivers.h" />
+    <ClInclude Include="irrklang\ik_EStreamModes.h" />
+    <ClInclude Include="irrklang\ik_IAudioRecorder.h" />
+    <ClInclude Include="irrklang\ik_IAudioStream.h" />
+    <ClInclude Include="irrklang\ik_IAudioStreamLoader.h" />
+    <ClInclude Include="irrklang\ik_IFileFactory.h" />
+    <ClInclude Include="irrklang\ik_IFileReader.h" />
+    <ClInclude Include="irrklang\ik_IRefCounted.h" />
+    <ClInclude Include="irrklang\ik_irrKlangTypes.h" />
+    <ClInclude Include="irrklang\ik_ISound.h" />
+    <ClInclude Include="irrklang\ik_ISoundDeviceList.h" />
+    <ClInclude Include="irrklang\ik_ISoundEffectControl.h" />
+    <ClInclude Include="irrklang\ik_ISoundEngine.h" />
+    <ClInclude Include="irrklang\ik_ISoundMixedOutputReceiver.h" />
+    <ClInclude Include="irrklang\ik_ISoundSource.h" />
+    <ClInclude Include="irrklang\ik_ISoundStopEventReceiver.h" />
+    <ClInclude Include="irrklang\ik_IVirtualRefCounted.h" />
+    <ClInclude Include="irrklang\ik_SAudioStreamFormat.h" />
+    <ClInclude Include="irrklang\ik_vec3d.h" />
+    <ClInclude Include="irrklang\irrKlang.h" />
     <ClInclude Include="media\texture\cube.h" />
     <ClInclude Include="media\texture\texture.h" />
     <ClInclude Include="particles.h" />

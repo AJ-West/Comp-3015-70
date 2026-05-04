@@ -17,6 +17,8 @@
 
 #include "helper/objmesh.h"
 
+#include "irrklang/irrKlang.h"
+
 class crossBow;
 
 class SceneBasic_Uniform : public Scene
@@ -72,6 +74,8 @@ private:
     vec3 homeScreenPos = vec3(2.0f, 0.9f, 1.5f);
     vec3 homeScreenFront = vec3(0.0f, 0.0f, -1.0f);
     vec3 GameStartPos = vec3(2.0f, 0.0f, 2.5f);
+        
+    irrklang::ISoundEngine* soundEffects;
 
     void setProgDefaults(GLSLProgram* cProg);
 
@@ -94,6 +98,8 @@ private:
     void endGame();
 
     void renderUI();
+
+    void initIrrklang();
 
 public:
     SceneBasic_Uniform();

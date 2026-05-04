@@ -22,6 +22,8 @@ using std::endl;
 #include "global.h"
 #include "crossbow.h"
 
+#include "irrklang/irrKlang.h"
+
 //ImGUI
 #include "helper/imgui/imgui.h"
 #include "helper/imgui/backends/imgui_impl_glfw.h"
@@ -173,6 +175,25 @@ void SceneBasic_Uniform::initScene()
 	flags.emplace_back(new Flag(vec3(0.0, 1.0, 2.0), vec3(90.0, 270.0, 0.0)));
 
 	camera->setCameraPosition(homeScreenPos);
+
+	initIrrklang();
+}
+
+void SceneBasic_Uniform::initIrrklang() {
+	irrklang::ISoundEngine* music = irrklang::createIrrKlangDevice();
+	if (!music) {
+		std::cerr << "Failed to load irrKlang DLL or initialize sound engine." << std::endl;
+		return;
+	}
+	music->play2D("sounds/70.wav", true); // looped playback
+	music->setSoundVolume(0.15f);
+
+	soundEffects = irrklang::createIrrKlangDevice();
+	if (!soundEffects) {
+		std::cerr << "Failed to load irrKlang DLL or initialize sound engine." << std::endl;
+		return;
+	}
+	soundEffects->setSoundVolume(0.5f);
 }
 
 void SceneBasic_Uniform::setUpFullScreenQuad() {
@@ -271,6 +292,7 @@ void SceneBasic_Uniform::startGame() {
 }
 
 void SceneBasic_Uniform::endGame() {
+	soundEffects->play2D("sounds/shot.wav");
 	homeScreen = true;
 	camera->setCameraPosition(homeScreenPos);
 	camera->togglePaused();
